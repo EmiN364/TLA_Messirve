@@ -10,6 +10,8 @@
 	/** Terminals. */
 
 	int integer;
+  	float floatNumber;
+  	char * string;
 	Token token;
 
 	/** Non-terminals. */
@@ -36,20 +38,45 @@
 
 /** Terminals. */
 %token <integer> INTEGER
-%token <token> ADD
 %token <token> CLOSE_PARENTHESIS
-%token <token> DIV
-%token <token> MUL
 %token <token> OPEN_PARENTHESIS
-%token <token> SUB
-
+%token <string> STRING
+%token <floatNumber> FLOAT
+%token <string> DATE
+%token <token> OPEN_BRACE
+%token <token> CLOSE_BRACE
+%token <token> SEMICOLON
+%token <token> COMMA
 %token <token> UNKNOWN
+%token <token> PLAYER
+%token <token> TOURNAMENT
+%token <token> STADIUM
+%token <token> BADGE
+%token <token> TROPHY
+%token <token> COUNTRY
+%token <token> TEAM
+%token <token> GROUP
+%token <token> LINEUP
+%token <token> HOMEKIT
+%token <token> BALL
+%token <token> SPECIAL
+%token <token> iCOUNTRY
+%token <token> iBIRTHDATE
+%token <token> iCLUB
+%token <token> iHEIGHT
+%token <token> iWEIGHT
+%token <token> iPHOTO
+%token <token> iCAPACITY
+%token <token> iNAME
+%token <token> iBRAND
+%token <token> URL
 
 /** Non-terminals. */
 %type <constant> constant
 %type <expression> expression
 %type <factor> factor
 %type <program> program
+%token <token> URL
 
 /**
  * Precedence and associativity.
@@ -61,7 +88,8 @@
 
 %%
 
-program: expression													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+program: album													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+	| figurita
 	;
 
 expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }

@@ -22,13 +22,24 @@ void shutdownFlexActionsModule();
  */
 
 void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void BeginSingleLineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void EndSingleLineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
-Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token BraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token AttributeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token URLLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token FloatLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token DateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
+Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token CommaLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 #endif

@@ -42,7 +42,19 @@ void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 	}
 }
 
+void BeginSingleLineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	if (_logIgnoredLexemes) {
+		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	}
+}
+
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	if (_logIgnoredLexemes) {
+		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	}
+}
+
+void EndSingleLineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	if (_logIgnoredLexemes) {
 		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	}
@@ -54,31 +66,18 @@ void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	}
 }
 
-Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	Token token;
-	switch (lexicalAnalyzerContext->lexeme[0]) {
-		case '-': token = SUB; break;
-		case '*': token = MUL; break;
-		case '/': token = DIV; break;
-		case '+': token = ADD; break;
-	}
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return token;
-}
-
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->integer = atoi(lexicalAnalyzerContext->lexeme);
 	return INTEGER;
 }
 
-Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+Token BraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	Token token;
 	switch (lexicalAnalyzerContext->lexeme[0]) {
-		case '(': token = OPEN_PARENTHESIS; break;
-		case ')': token = CLOSE_PARENTHESIS; break;
+		case '{': token = OPEN_BRACE; break;
+		case '}': token = CLOSE_BRACE; break;
 	}
 	lexicalAnalyzerContext->semanticValue->token = token;
 	return token;
@@ -87,4 +86,101 @@ Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return UNKNOWN;
+}
+
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	Token token;
+	if (strcmp(lexicalAnalyzerContext->lexeme, "player") == 0) {
+		token = PLAYER;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "tournament") == 0) {
+		token = TOURNAMENT;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "stadium") == 0) {
+		token = STADIUM;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "badge") == 0) {
+		token = BADGE;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "trophy") == 0) {
+		token = TROPHY;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "country") == 0) {
+		token = COUNTRY;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "team") == 0) {
+		token = TEAM;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "group") == 0) {
+		token = GROUP;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "lineup") == 0) {
+		token = LINEUP;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "homekit") == 0) {
+		token = HOMEKIT;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "ball") == 0) {
+		token = BALL;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "special") == 0) {
+		token = SPECIAL;
+	}
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return token;
+}
+
+Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	return SEMICOLON;
+}
+
+Token CommaLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	return COMMA;
+}
+
+Token URLLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	return URL;
+}
+
+Token AttributeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	Token token;
+	if (strcmp(lexicalAnalyzerContext->lexeme, "country:") == 0) {
+		token = iCOUNTRY;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "birthdate:") == 0) {
+		token = iBIRTHDATE;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "club:") == 0) {
+		token = iCLUB;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "height:") == 0) {
+		token = iHEIGHT;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "weight:") == 0) {
+		token = iWEIGHT;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "photo:") == 0) {
+		token = iPHOTO;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "capacity:") == 0) {
+		token = iCAPACITY;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "name:") == 0) {
+		token = iNAME;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "brand:") == 0) {
+		token = iBRAND;
+	}
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return token;
+}
+
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
+	return STRING;
+}
+
+Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->integer = atoi(lexicalAnalyzerContext->lexeme);
+	return INTEGER;
+}
+
+Token FloatLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->floatNumber = atof(lexicalAnalyzerContext->lexeme);
+	return FLOAT;
+}
+
+Token DateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
+	return DATE;
 }
