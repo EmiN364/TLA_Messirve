@@ -125,6 +125,11 @@ Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	return SEMICOLON;
 }
 
+Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	return COLON;
+}
+
 Token CommaLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return COMMA;

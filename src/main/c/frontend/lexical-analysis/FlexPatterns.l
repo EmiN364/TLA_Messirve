@@ -52,22 +52,24 @@ url                                 { return URLLexemeAction(createLexicalAnalyz
 "homekit"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 "ball"                              { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 "special"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
+"special"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 
 "{"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 "}"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 
 ";"                                 { return SemicolonLexemeAction(createLexicalAnalyzerContext()); }
+":"                                 { return SemicolonLexemeAction(createLexicalAnalyzerContext()); }
 ","                                 { return CommaLexemeAction(createLexicalAnalyzerContext()); }
 
-"Country:"                          { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Birthdate:"                        { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Club:"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Height:"                           { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Weight:"                           { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Photo:"                            { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Capacity:"                         { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Name:"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Brand:"                            { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Country"                           { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Birthdate"                         { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Club"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Height"                            { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Weight"                            { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Photo"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Capacity"                          { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Name"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Brand"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 
 string                              { return StringLexemeAction(createLexicalAnalyzerContext()); }
 float                               { return FloatLexemeAction(createLexicalAnalyzerContext()); }

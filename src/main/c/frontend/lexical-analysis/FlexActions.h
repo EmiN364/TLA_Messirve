@@ -40,6 +40,7 @@ Token DateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token CommaLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 #endif

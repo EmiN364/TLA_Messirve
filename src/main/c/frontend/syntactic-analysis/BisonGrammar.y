@@ -20,6 +20,28 @@
 	Expression * expression;
 	Factor * factor;
 	Program * program;
+	Player * player;
+	Tournament * tournament;
+	Stadium * stadium;
+	Badge * badge;
+	Trophy * trophy;
+	Country * country;
+	Team * team;
+	Group * group;
+	Lineup * lineup;
+	Homekit * homekit;
+	Ball * ball;
+	Special * special;
+	iCountry * icountry;
+	iBirthday * ibirthday;
+	iClub * iclub;
+	iHeight * iheight;
+	iWeight * iweight;
+	iPhoto * iphoto;
+	iCapacity * icapacity;
+	iName * iname;
+	iBrand * ibrand;
+	Url * url;
 }
 
 /**
@@ -46,37 +68,37 @@
 %token <token> OPEN_BRACE
 %token <token> CLOSE_BRACE
 %token <token> SEMICOLON
+%token <token> COLON
 %token <token> COMMA
 %token <token> UNKNOWN
-%token <token> PLAYER
-%token <token> TOURNAMENT
-%token <token> STADIUM
-%token <token> BADGE
-%token <token> TROPHY
-%token <token> COUNTRY
-%token <token> TEAM
-%token <token> GROUP
-%token <token> LINEUP
-%token <token> HOMEKIT
-%token <token> BALL
-%token <token> SPECIAL
-%token <token> iCOUNTRY
-%token <token> iBIRTHDATE
-%token <token> iCLUB
-%token <token> iHEIGHT
-%token <token> iWEIGHT
-%token <token> iPHOTO
-%token <token> iCAPACITY
-%token <token> iNAME
-%token <token> iBRAND
-%token <token> URL
 
 /** Non-terminals. */
 %type <constant> constant
 %type <expression> expression
 %type <factor> factor
 %type <program> program
-%token <token> URL
+%type <Player> PLAYER
+%type <Tournament> TOURNAMENT
+%type <Stadium> STADIUM
+%type <Badge> BADGE
+%type <Trophy> TROPHY
+%type <Country> COUNTRY
+%type <Team> TEAM
+%type <Group> GROUP
+%type <Lineup> LINEUP
+%type <Homekit> HOMEKIT
+%type <Ball> BALL
+%type <Special> SPECIAL
+%type <iCountry> iCOUNTRY
+%type <iBirthday> iBIRTHDATE
+%type <iClub> iCLUB
+%type <iHeight> iHEIGHT
+%type <iWeight> iWEIGHT
+%type <iPhoto> iPHOTO
+%type <iCapacity> iCAPACITY
+%type <iName> iNAME
+%type <iBrand> iBRAND
+%type <Url> URL
 
 /**
  * Precedence and associativity.
@@ -88,22 +110,21 @@
 
 %%
 
-program: album													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| figurita
+program: tournament													{ $$ = null }
 	;
 
-expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
-	| expression[left] DIV expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }
-	| expression[left] MUL expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
-	| expression[left] SUB expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
-	| factor														{ $$ = FactorExpressionSemanticAction($1); }
+tournament: TOURNAMENT STRING OPEN_BRACE body CLOSE_BRACE			{ $$ = null }
 	;
 
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
-	| constant														{ $$ = ConstantFactorSemanticAction($1); }
+body: constructions													{ $$ = null }
 	;
 
-constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
+constructions: construction COMMA construction						{ $$ = null }
+ | construction														{ $$ = null }
+	;
+
+construction: TROPHY OPEN_BRACE iPHOTO COLON STRING CLOSE_BRACE		{ $$ = null }
+ | ETCCCCCCCCCCCCCC													{ $$ = null }
 	;
 
 %%
