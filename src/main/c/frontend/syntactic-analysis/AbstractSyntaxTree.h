@@ -14,6 +14,7 @@ void shutdownAbstractSyntaxTreeModule();
  * This typedefs allows self-referencing types.
  */
 
+typedef struct Expression Expression;
 typedef struct Program Program;
 typedef struct Tournament Tournament;
 typedef struct TElements TElements;
@@ -50,10 +51,10 @@ typedef struct Figuritas Figuritas;
  * Node types for the Abstract Syntax Tree (AST).
  */
 
-typedef enum ProgamType {
+typedef enum ExpressionType {
 	TOURNAMENT_TYPE,
 	ELEMENTS_TYPE
-} ProgamType;
+} ExpressionType;
 
 typedef enum SingleOrMultiple {
 	SINGLE,
@@ -107,13 +108,16 @@ typedef enum StadiumDataType {
 	STADIUM_PHOTO
 } StadiumDataType;
 
-
 struct Program {
+	Expression * expression;
+}
+
+struct Expression {
 	union {
 		Tournament * tournament;
 		Elements * elements;
 	};
-	ProgamType type;
+	ExpressionType type;
 };
 
 struct Tournament {
@@ -190,7 +194,7 @@ struct Teams {
 
 struct Team {
 	char * name;
-	TTeam * tTeam;
+	TTeams * tTeams;
 };
 
 struct TTeams {

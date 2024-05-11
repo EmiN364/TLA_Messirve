@@ -15,7 +15,7 @@
 	Token token;
 
 	/** Non-terminals. */
-
+	Expression * expression;
 	Program * program;
 	Tournament * tournament;
 	Elements * elements;
@@ -93,6 +93,7 @@
 
 
 /** Non-terminals. */
+%type <expression> expression
 %type <program> program
 %type <tournament> tournament
 %type <elements> elements
@@ -128,58 +129,61 @@
 
 %%
 
-program: tournament													{ $$ = ExpressionProgramSemanticAction($1); }
-	| elements														{ $$ = ExpressionProgramSemanticAction($1); }
+program: expression													{ $$ = ProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
-tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = ExpressionProgramSemanticAction($2, $4); }
+expression: tournament												{ $$ = ExpressionTournamentSemanticAction($1); }
+	| elements														{ $$ = ExpressionElementsSemanticAction($1); }
 	;
 
-elements: element COMMA elements									{ $$ = ExpressionProgramSemanticAction($1, $3); }
-	| element														{ $$ = ExpressionProgramSemanticAction($1); }
+tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = TournamentSemanticAction($2, $4); }
 	;
 
-element: trophy														{ $$ = ExpressionProgramSemanticAction($1); }
-	| team															{ $$ = ExpressionProgramSemanticAction($1); }
-	| stadium														{ $$ = ExpressionProgramSemanticAction($1); }
-	| badge															{ $$ = ExpressionProgramSemanticAction($1); }
-	| player														{ $$ = ExpressionProgramSemanticAction($1); }
-	| ball															{ $$ = ExpressionProgramSemanticAction($1); }
-	| special 														{ $$ = ExpressionProgramSemanticAction($1); }
+elements: element COMMA elements									{ $$ = MultipleElementsSemanticAction($1, $3); }
+	| element														{ $$ = SimpleElementsSemanticAction($1); }
 	;
 
-tElements: tElement													{ $$ = ExpressionProgramSemanticAction($1); }
-	| tElement COMMA tElements										{ $$ = ExpressionProgramSemanticAction($1, $3); }
+element: trophy														{ $$ = TrophyElementSemanticAction($1); }
+	| team															{ $$ = TeamElementSemanticAction($1); }
+	| stadium														{ $$ = StadiumElementSemanticAction($1); }
+	| badge															{ $$ = BadgeElementSemanticAction($1); }
+	| player														{ $$ = PlayerElementSemanticAction($1); }
+	| ball															{ $$ = BallElementSemanticAction($1); }
+	| special 														{ $$ = SpecialElementSemanticAction($1); }
 	;
 
-tElement: trophy													{ $$ = ExpressionProgramSemanticAction($1); }
-	| team															{ $$ = ExpressionProgramSemanticAction($1); }
-	| group															{ $$ = ExpressionProgramSemanticAction($1); }
-	| stadium														{ $$ = ExpressionProgramSemanticAction($1); }
-	| ball															{ $$ = ExpressionProgramSemanticAction($1); }
+tElements: tElement													{ $$ = SingleTournamentElementSemanticAction($1); }
+	| tElement COMMA tElements										{ $$ = MultipleTournamentSemanticAction($1, $3); }
 	;
 
-trophy: TROPHY OPEN_BRACE photo CLOSE_BRACE							{ $$ = ExpressionProgramSemanticAction($3); }
+tElement: trophy													{ $$ = TrophyTournamentElementSemanticAction($1); }
+	| team															{ $$ = TeamTournamentElementSemanticAction($1); }
+	| group															{ $$ = GroupTournamentElementSemanticAction($1); }
+	| stadium														{ $$ = StadiumTournamentElementSemanticAction($1); }
+	| ball															{ $$ = BallTournamentElementSemanticAction($1); }
 	;
 
-group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction($2, $4); }
+trophy: TROPHY STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = TrophySemanticAction($2, $4); }
 	;
 
-teams: team COMMA teams													{ $$ = ExpressionProgramSemanticAction($1, $3); }
-	| team															{ $$ = ExpressionProgramSemanticAction($1); }
+group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = GroupSemanticAction($2, $4); }
 	;
 
-team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = ExpressionProgramSemanticAction($2, $4); }
+teams: team COMMA teams												{ $$ = MultipleTeamSemanticAction($1, $3); }
+	| team															{ $$ = SingleTeamProgramSemanticAction($1); }
 	;
 
-tTeams: tTeam														{ $$ = ExpressionProgramSemanticAction($1); }	
-	| tTeam COMMA tTeams													{ $$ = ExpressionProgramSemanticAction($1, $3); }
+team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = TeamSemanticAction($2, $4);}
 	;
 
-tTeam: badge														{ $$ = ExpressionProgramSemanticAction($1); }
-	| lineup														{ $$ = ExpressionProgramSemanticAction($1); }
-	| homekit														{ $$ = ExpressionProgramSemanticAction($1); }
-	| player														{ $$ = ExpressionProgramSemanticAction($1); }
+tTeams: tTeam														{ $$ = SingleTTeamsSemanticAction($1); }	
+	| tTeam COMMA tTeams											{ $$ = MultipleTTeamsSemanticAction($1, $3); }
+	;
+
+tTeam: badge														{ $$ = BadgeTTeamSemanticAction($1); }
+	| lineup														{ $$ = LineupTTeamSemanticAction($1); }
+	| homekit														{ $$ = HomekitTTeamSemanticAction($1); }
+	| player														{ $$ = PlayerTTeamSemanticAction($1); }
 	;
 
 player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction($2, $4); }

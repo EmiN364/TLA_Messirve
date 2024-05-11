@@ -14,6 +14,8 @@ void initializeBisonActionsModule();
 /** Shutdown module's internal state. */
 void shutdownBisonActionsModule();
 
+
+
 /**
  * Bison semantic actions.
  */
@@ -22,7 +24,68 @@ void shutdownBisonActionsModule();
 Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type);
 Expression * FactorExpressionSemanticAction(Factor * factor);
 Factor * ConstantFactorSemanticAction(Constant * constant);
-Factor * ExpressionFactorSemanticAction(Expression * expression);
-Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression); */
+Factor * ExpressionFactorSemanticAction(Expression * expression);*/
+
+Program * ProgramSemanticAction(CompilerState * compilerState, Expression * expression); 
+
+Expression * ExpressionTournamentSemanticAction(Tournament * tournament); 
+
+Expression * ExpressionElementsSemanticAction(Elements * elements); 
+
+Tournament * TournamentSemanticAction(char * tournamentName, TElements * tElements);
+
+Elements * MultipleElementsSemanticAction(Element * element, Elements * elements);
+
+Elements * SingleElementSemanticAction(Element * element);
+
+Element * TrophyElementSemanticAction(Trophy * trophy);
+
+Element * TeamElementSemanticAction(Team * team);
+
+Element * StadiumElementSemanticAction(Stadium * stadium);
+
+Element * BadgeElementSemanticAction(Badge * badge);
+
+Element * PlayerElementSemanticAction(Player * player);
+
+Element * BallElementSemanticAction(Ball * ball);
+
+Element * SpecialElementSemanticAction(Special * special);
+
+tElements * SingleTournamentElementSemanticAction(TElement * tElement);
+
+tElements *  MultipleTournamentSemanticAction(TElement * tElement, TElements * tElements);
+
+tElement * TrophyTournamentElementSemanticAction(Trophy * trophy);
+
+tElement * TeamTournamentElementSemanticAction(Team * team);
+
+tElement * GroupTournamentElementSemanticAction(Groups * group);
+
+tElement * StadiumTournamentElementSemanticAction(Stadium * stadium);
+
+tElement * BallTournamentElementSemanticAction(Ball * ball);
+
+Trophy * TrophySemanticAction(char * name, Photo * photo);
+
+Group * GroupSemanticAction(char * name, Teams * teams);
+
+Teams * MultipleTeamsSemanticAction(Team * team, Teams * teams);
+
+Teams * SingleTeamProgramSemanticAction(Team * team);
+
+Team * TeamSemanticAction(char * name, TTeams * tTeams);
+
+TTeams * SingleTTeamsSemanticAction(TTeam * tTeam);
+
+TTeams * MultipleTTeamsSemanticAction(TTeam * tTeam, TTeams * tTeams);
+
+TTeam * BadgeTTeamSemanticAction(Badge * badge);
+
+TTeam * LineupTTeamSemanticAction(Lineup * lineup);
+
+TTeam * HomekitTTeamSemanticAction(Homekit * homekit);
+
+TTeam * PlayerTTeamSemanticAction(Player * player);
 
 #endif
