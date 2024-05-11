@@ -85,7 +85,14 @@ struct Program {
 };
 
 struct Elements {
-	Element ** elements;
+	union {
+		struct {
+			Element * left_element;
+			Element * right_element;
+		};
+		Element * element;
+	};
+	ElementType type;
 };
 
 struct Tournament {

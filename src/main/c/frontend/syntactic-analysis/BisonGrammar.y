@@ -24,7 +24,6 @@
 	TElement * tElement;
 	Trophy * trophy;
 	Group * group;
-	Groups * groups;
 	Stadium * stadium;
 	StadiumDatas * stadiumDatas;
 	StadiumData * stadiumData;
@@ -102,7 +101,6 @@
 %type <tElement> tElement
 %type <trophy> trophy
 %type <group> group
-%type <groups> groups
 %type <stadium> stadium
 %type <stadiumDatas> stadiumDatas
 %type <stadiumData> stadiumData
@@ -127,114 +125,111 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
  */
-/* %left ADD SUB
-%left MUL DIV */
 
 %%
 
-program: tournament													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| elements														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+program: tournament													{ $$ = ExpressionProgramSemanticAction($1); }
+	| elements														{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
-elements: element COMMA elements									{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
-	| element														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+elements: element COMMA elements									{ $$ = ExpressionProgramSemanticAction($1, $3); }
+	| element														{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-element: trophy														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| team															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| stadium														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| badge															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| player														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| ball															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| special 														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+element: trophy														{ $$ = ExpressionProgramSemanticAction($1); }
+	| team															{ $$ = ExpressionProgramSemanticAction($1); }
+	| stadium														{ $$ = ExpressionProgramSemanticAction($1); }
+	| badge															{ $$ = ExpressionProgramSemanticAction($1); }
+	| player														{ $$ = ExpressionProgramSemanticAction($1); }
+	| ball															{ $$ = ExpressionProgramSemanticAction($1); }
+	| special 														{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-tElements: tElement													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| tElement COMMA tElements										{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
+tElements: tElement													{ $$ = ExpressionProgramSemanticAction($1); }
+	| tElement COMMA tElements										{ $$ = ExpressionProgramSemanticAction($1, $3); }
 	;
 
-tElement: trophy													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| team															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| groups														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| stadium														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| ball															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+tElement: trophy													{ $$ = ExpressionProgramSemanticAction($1); }
+	| team															{ $$ = ExpressionProgramSemanticAction($1); }
+	| group															{ $$ = ExpressionProgramSemanticAction($1); }
+	| stadium														{ $$ = ExpressionProgramSemanticAction($1); }
+	| ball															{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-trophy: TROPHY OPEN_BRACE photo CLOSE_BRACE							{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $3); }
+trophy: TROPHY OPEN_BRACE photo CLOSE_BRACE							{ $$ = ExpressionProgramSemanticAction($3); }
 	;
 
-groups: group COMMA groups												{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
-	| group															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
-group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+teams: team COMMA teams													{ $$ = ExpressionProgramSemanticAction($1, $3); }
+	| team															{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-teams: team COMMA teams													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
-	| team															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
-team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+tTeams: tTeam														{ $$ = ExpressionProgramSemanticAction($1); }	
+	| tTeam COMMA tTeams													{ $$ = ExpressionProgramSemanticAction($1, $3); }
 	;
 
-tTeams: tTeam														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }	
-	| tTeam COMMA tTeams													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
-
-tTeam: badge														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| lineup														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| homekit														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| player														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-;
-
-player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+tTeam: badge														{ $$ = ExpressionProgramSemanticAction($1); }
+	| lineup														{ $$ = ExpressionProgramSemanticAction($1); }
+	| homekit														{ $$ = ExpressionProgramSemanticAction($1); }
+	| player														{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-playerDatas: playerData playerDatas									{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
-	| playerData													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-
-playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
-	| playerTypeFloat COLON FLOAT SEMICOLON							{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
+player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
-playerTypeString: iCOUNTRY     										{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| iBIRTHDATE 													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| iTEAM  														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| iPHOTO  														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+playerDatas: playerData playerDatas									{ $$ = ExpressionProgramSemanticAction($1, $2); }
+	| playerData													{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-playerTypeFloat: iHEIGHT											{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| iWEIGHT														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = ExpressionProgramSemanticAction($1, $3); }
+	| playerTypeFloat COLON FLOAT SEMICOLON							{ $$ = ExpressionProgramSemanticAction($1, $3); }
 	;
 
-stadium: STADIUM STRING OPEN_BRACE stadiumDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+playerTypeString: iCOUNTRY     										{ $$ = ExpressionProgramSemanticAction($1); }
+	| iBIRTHDATE 													{ $$ = ExpressionProgramSemanticAction($1); }
+	| iTEAM  														{ $$ = ExpressionProgramSemanticAction($1); }
+	| iPHOTO  														{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-stadiumDatas: stadiumData stadiumDatas								{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
-	| stadiumData													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-
-stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
-	| photo															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+playerTypeFloat: iHEIGHT											{ $$ = ExpressionProgramSemanticAction($1); }
+	| iWEIGHT														{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+stadium: STADIUM STRING OPEN_BRACE stadiumDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
-photo: iPHOTO COLON URL SEMICOLON									{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $3); }
+stadiumDatas: stadiumData stadiumDatas								{ $$ = ExpressionProgramSemanticAction($1, $2); }
+	| stadiumData													{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-lineup: LINEUP STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = ExpressionProgramSemanticAction($1, $3); }
+	| photo															{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
-homekit: HOMEKIT STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
-ball: BALL STRING OPEN_BRACE photo CLOSE_BRACE						{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+photo: iPHOTO COLON URL COLON STRING SEMICOLON						{ $$ = ExpressionProgramSemanticAction($3); }
 	;
 
-special: SPECIAL STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+lineup: LINEUP STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction($2, $4); }
+	;
+
+homekit: HOMEKIT STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction($2, $4); }
+	;
+
+ball: BALL STRING OPEN_BRACE photo CLOSE_BRACE						{ $$ = ExpressionProgramSemanticAction($2, $4); }
+	;
+
+special: SPECIAL STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction($2, $4); }
 	;
 
 %%
