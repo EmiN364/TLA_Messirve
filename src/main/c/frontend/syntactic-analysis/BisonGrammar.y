@@ -186,54 +186,54 @@ tTeam: badge														{ $$ = BadgeTTeamSemanticAction($1); }
 	| player														{ $$ = PlayerTTeamSemanticAction($1); }
 	;
 
-player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction($2, $4); }
+player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE			{ $$ = PlayerSemanticAction($2, $4); }
 	;
 
-playerDatas: playerData playerDatas									{ $$ = ExpressionProgramSemanticAction($1, $2); }
-	| playerData													{ $$ = ExpressionProgramSemanticAction($1); }
+playerDatas: playerData playerDatas									{ $$ = MultiplePlayerDatasSemanticAction($1, $2); }
+	| playerData													{ $$ = SinglePlayerDatasSemanticAction($1); }
 	;
 
-playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = ExpressionProgramSemanticAction($1, $3); }
-	| playerTypeFloat COLON FLOAT SEMICOLON							{ $$ = ExpressionProgramSemanticAction($1, $3); }
+playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = PlayerDataStringSemanticAction($3); }
+	| playerTypeFloat COLON FLOAT SEMICOLON							{ $$ = PlayerDataFloatSemanticAction($3); }
 	;
 
-playerTypeString: iCOUNTRY     										{ $$ = ExpressionProgramSemanticAction($1); }
-	| iBIRTHDATE 													{ $$ = ExpressionProgramSemanticAction($1); }
-	| iTEAM  														{ $$ = ExpressionProgramSemanticAction($1); }
-	| iPHOTO  														{ $$ = ExpressionProgramSemanticAction($1); }
+playerTypeString: iCOUNTRY     										{ $$ = PlayerTypeCountrySemanticAction(); }
+	| iBIRTHDATE 													{ $$ = PlayerTypeBirthdaySemanticAction(); }
+	| iTEAM  														{ $$ = PlayerTypeTeamSemanticAction(); }
+	| iPHOTO  														{ $$ = PlayerTypePhotoSemanticAction(); }
 	;
 
-playerTypeFloat: iHEIGHT											{ $$ = ExpressionProgramSemanticAction($1); }
-	| iWEIGHT														{ $$ = ExpressionProgramSemanticAction($1); }
+playerTypeFloat: iHEIGHT											{ $$ = PlayerTypeHeightSemanticAction(); }
+	| iWEIGHT														{ $$ = PlayerTypeWeightSemanticAction(); }
 	;
 
-stadium: STADIUM STRING OPEN_BRACE stadiumDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction($2, $4); }
+stadium: STADIUM STRING OPEN_BRACE stadiumDatas CLOSE_BRACE			{ $$ = StadiumSemanticAction($2, $4); }
 	;
 
-stadiumDatas: stadiumData stadiumDatas								{ $$ = ExpressionProgramSemanticAction($1, $2); }
-	| stadiumData													{ $$ = ExpressionProgramSemanticAction($1); }
+stadiumDatas: stadiumData stadiumDatas								{ $$ = MultipleStadiumDatasSemanticAction($1, $2); }
+	| stadiumData													{ $$ = SingleStadiumDatasSemanticAction($1); }
 	;
 
-stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = ExpressionProgramSemanticAction($1, $3); }
-	| photo															{ $$ = ExpressionProgramSemanticAction($1); }
+stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = StadiumDataSemanticAction($3); }
+	| photo															{ $$ = StadiumDataPhotoSemanticAction($1); }
 	;
 
-badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction($2, $4); }
+badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = BadgeSemanticAction($2, $4); }
 	;
 
-photo: iPHOTO COLON URL COLON STRING SEMICOLON						{ $$ = ExpressionProgramSemanticAction($3); }
+photo: iPHOTO COLON URL COLON STRING SEMICOLON						{ $$ = PhotoSemanticAction($3); }
 	;
 
-lineup: LINEUP STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction($2, $4); }
+lineup: LINEUP STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = LineupSemanticAction($2, $4); }
 	;
 
-homekit: HOMEKIT STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction($2, $4); }
+homekit: HOMEKIT STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = HomekitSemanticAction($2, $4); }
 	;
 
-ball: BALL STRING OPEN_BRACE photo CLOSE_BRACE						{ $$ = ExpressionProgramSemanticAction($2, $4); }
+ball: BALL STRING OPEN_BRACE photo CLOSE_BRACE						{ $$ = BallSemanticAction($2, $4); }
 	;
 
-special: SPECIAL STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction($2, $4); }
+special: SPECIAL STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = SpecialSemanticAction($2, $4); }
 	;
 
 %%

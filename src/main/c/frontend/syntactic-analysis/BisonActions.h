@@ -88,4 +88,47 @@ TTeam * HomekitTTeamSemanticAction(Homekit * homekit);
 
 TTeam * PlayerTTeamSemanticAction(Player * player);
 
+Player * PlayerSemanticAction(char * name, playerDatas * playerDatas);
+
+PlayerDatas * SinglePlayerDatasSemanticAction(PlayerData * playerData);
+
+PlayerDatas * MultiplePlayerDatasSemanticAction(PlayerData * playerData, PlayerDatas * playerDatas);
+
+PlayerData * PlayerDataStringSemanticAction(char * value);
+
+PlayerData * PlayerDataFloatSemanticAction(float floatValue);
+
+PlayerTypeString * PlayerTypeCountrySemanticAction();
+
+PlayerTypeString * PlayerTypeBirthdaySemanticAction();
+
+PlayerTypeString * PlayerTypeTeamSemanticAction();
+
+PlayerTypeString * PlayerTypePhotoSemanticAction();
+
+PlayerTypeFloat * PlayerTypeHeightSemanticAction();
+
+PlayerTypeFloat * PlayerTypeWeightSemanticAction();
+
+Stadium * StadiumSemanticAction(char * name, StadiumDatas * stadiumDatas);
+
+StadiumDatas * SingleStadiumDatasSemanticAction(StadiumData * stadiumData);
+
+StadiumDatas * MultipleStadiumDatasSemanticAction(StadiumData * stadiumData, StadiumDatas * stadiumDatas);
+
+StadiumData * StadiumDataSemanticAction(int value);
+
+StadiumData * StadiumDataPhotoSemanticAction(photo * photo);
+
+Badge * BadgeSemanticAction(char * name, photo * photo);
+
+Photo * PhotoSemanticAction(char * value);
+
+Lineup * LineupSemanticAction(char * name, Photo * photo);
+
+Homekit * HomekitSemanticAction(char * name, Photo * photo);
+
+Ball * BallSemanticAction(char * name, Photo * photo);
+
+Special * SpecialSemanticAction(char * name, Photo * photo);
 #endif
