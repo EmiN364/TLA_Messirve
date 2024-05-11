@@ -23,7 +23,7 @@
 
 integer [[:digit:]]+
 float integer"."integer
-string ([[:alpha:][:space:]])+([,;])
+string ([[:alnum:][:space:][:punct:]])+
 date digitdigit/digitdigit/digitdigitdigitdigit
 url "http(s)?://"string"(.png|.jpg|.jpeg)"
 
@@ -65,7 +65,7 @@ url                                 { return URLLexemeAction(createLexicalAnalyz
 
 "Country"                           { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Birthdate"                         { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
-"Club"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
+"Team"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Height"                            { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Weight"                            { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Photo"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }

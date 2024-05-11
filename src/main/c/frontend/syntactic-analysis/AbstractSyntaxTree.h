@@ -127,7 +127,7 @@ struct Player {
 	char * name;
 	char * country;
 	char * birthday;
-	char * club;
+	char * team;
 	float height;
 	float weight;
 	char * photo;

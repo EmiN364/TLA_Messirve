@@ -147,8 +147,8 @@ Token AttributeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 		token = iCOUNTRY;
 	} else if (strcmp(lexicalAnalyzerContext->lexeme, "birthdate:") == 0) {
 		token = iBIRTHDATE;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "club:") == 0) {
-		token = iCLUB;
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "team:") == 0) {
+		token = iTEAM;
 	} else if (strcmp(lexicalAnalyzerContext->lexeme, "height:") == 0) {
 		token = iHEIGHT;
 	} else if (strcmp(lexicalAnalyzerContext->lexeme, "weight:") == 0) {
