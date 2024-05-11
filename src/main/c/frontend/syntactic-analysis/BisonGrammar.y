@@ -16,23 +16,27 @@
 
 	/** Non-terminals. */
 
-	Constant * constant;
 	Program * program;
 	Tournament * tournament;
+	Elements * elements;
 	Element * element;
 	TElements * tElements;
+	TElement * tElement;
 	Trophy * trophy;
 	Group * group;
 	Groups * groups;
 	Stadium * stadium;
+	StadiumDatas * stadiumDatas;
 	StadiumData * stadiumData;
 	Badge * badge;
 	Player * player;
+	PlayerDatas * playerDatas;
 	PlayerData * playerData;
 	PlayerTypeString * playerTypeString;
 	PlayerTypeFloat * playerTypeFloat;
 	Team * team;
 	Teams * teams;
+	TTeams * tTeams;
 	TTeam * tTeam;
 	Lineup * lineup;
 	Homekit * homekit;
@@ -57,11 +61,8 @@
 
 /** Terminals. */
 %token <integer> INTEGER
-%token <token> CLOSE_PARENTHESIS
-%token <token> OPEN_PARENTHESIS
 %token <string> STRING
 %token <floatNumber> FLOAT
-%token <string> DATE
 %token <token> OPEN_BRACE
 %token <token> CLOSE_BRACE
 %token <token> SEMICOLON
@@ -89,26 +90,31 @@
 %token <token> iNAME
 %token <token> iBRAND
 %token <token> URL
+%token <string> DATE
 
 
 /** Non-terminals. */
-%type <constant> constant
 %type <program> program
 %type <tournament> tournament
+%type <elements> elements
 %type <element> element
 %type <tElements> tElements
+%type <tElement> tElement
 %type <trophy> trophy
 %type <group> group
 %type <groups> groups
 %type <stadium> stadium
+%type <stadiumDatas> stadiumDatas
 %type <stadiumData> stadiumData
 %type <badge> badge
 %type <player> player
+%type <playerDatas> playerDatas
 %type <playerData> playerData
 %type <playerTypeString> playerTypeString
 %type <playerTypeFloat> playerTypeFloat
 %type <team> team
 %type <teams> teams
+%type <tTeams> tTeams
 %type <tTeam> tTeam
 %type <lineup> lineup
 %type <homekit> homekit
@@ -121,16 +127,20 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
  */
-%left ADD SUB
-%left MUL DIV
+/* %left ADD SUB
+%left MUL DIV */
 
 %%
 
 program: tournament													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| element														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+	| elements														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
-tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = ExpressionTournamentSemanticAction(currentCompilerState(), $4); }
+tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = ExpressionTournamentSemanticAction(currentCompilerState(), $2, $4); }
+	;
+
+elements: elements COMMA element											{ $$ = ExpressionElementsSemanticAction(currentCompilerState(), $1, $2); }
+	| element														{ $$ = ExpressionElementsSemanticAction(currentCompilerState(), $1); }
 	;
 
 element: trophy														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
@@ -139,47 +149,53 @@ element: trophy														{ $$ = ExpressionElementSemanticAction(currentCompi
 	| badge															{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| player														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| ball															{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
-	| element element												{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	;
 
-tElements: trophy													{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
+tElements: tElement													{ $$ = ExpressionElementsSemanticAction(currentCompilerState(), $1); }
+	| tElements COMMA tElement											{ $$ = ExpressionElementsSemanticAction(currentCompilerState(), $1, $2); }
+	;
+
+tElement: trophy													{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| team															{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| groups														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| stadium														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| ball															{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
-	| tElements tElements											{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	;
 
-trophy: TROPHY OPEN_BRACE photo CLOSE_BRACE	{ $$ = ExpressionTrophySemanticAction(currentCompilerState(), $5); }
+trophy: TROPHY OPEN_BRACE photo CLOSE_BRACE							{ $$ = ExpressionTrophySemanticAction(currentCompilerState(), $3); }
 	;
 
-groups: groups group												{ $$ = ExpressionGroupsSemanticAction(currentCompilerState(), $1, $2); }
-	| group															{ $$ = ExpressionGroupsSemanticAction(currentCompilerState(), $1, NULL); }
+groups: groups COMMA group												{ $$ = ExpressionGroupsSemanticAction(currentCompilerState(), $1, $2); }
+	| group															{ $$ = ExpressionGroupsSemanticAction(currentCompilerState(), $1); }
 	;
 
 group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = ExpressionGroupSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-teams: teams team													{ $$ = ExpressionTeamsSemanticAction(currentCompilerState(), $1, $2); }
-	| team															{ $$ = ExpressionTeamsSemanticAction(currentCompilerState(), NULL, $1); }
+teams: teams COMMA team													{ $$ = ExpressionTeamsSemanticAction(currentCompilerState(), $1, $2); }
+	| team															{ $$ = ExpressionTeamsSemanticAction(currentCompilerState(), $1); }
 	;
 
-team: TEAM STRING OPEN_BRACE tTeam CLOSE_BRACE						{ $$ = ExpressionTeamSemanticAction(currentCompilerState(), $2, $4, $5); }
+team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = ExpressionTeamSemanticAction(currentCompilerState(), $2, $4); }
 	;
+
+tTeams: tTeam														{ $$ = ExpressionTeamsSemanticAction(currentCompilerState(), $1); }	
+	| tTeams COMMA tTeam													{ $$ = ExpressionTeamsSemanticAction(currentCompilerState(), $1, $2); }
 
 tTeam: badge														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| lineup														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| homekit														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 	| player														{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
-	| tTeam tTeam													{ $$ = ExpressionElementSemanticAction(currentCompilerState(), $1); }
 ;
 
-player: PLAYER STRING OPEN_BRACE playerData CLOSE_BRACE				{ $$ = ExpressionPlayerSemanticAction(currentCompilerState(), $2, $5, $8, $11, $14, $17); }
+player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE				{ $$ = ExpressionPlayerSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1); }
-	| playerTypeFloat COLON FLOAT SEMICOLON							{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1); }
-	| playerData playerData											{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1); }
+playerDatas: playerData playerData									{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1, $2); }
+	| playerData													{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1); }
+
+playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1, $3); }
+	| playerTypeFloat COLON FLOAT SEMICOLON							{ $$ = ExpressionPlayerDataSemanticAction(currentCompilerState(), $1, $3); }
 	;
 
 playerTypeString: iCOUNTRY     										{ $$ = ExpressionPlayerTypeSemanticAction(currentCompilerState(), $1); }
@@ -192,33 +208,33 @@ playerTypeFloat: iHEIGHT											{ $$ = ExpressionPlayerTypeSemanticAction(cur
 	| iWEIGHT														{ $$ = ExpressionPlayerTypeSemanticAction(currentCompilerState(), $1); }
 	;
 
-stadium: STADIUM STRING OPEN_BRACE stadiumData CLOSE_BRACE			{ $$ = ExpressionStadiumSemanticAction(currentCompilerState(), $2, $5, $8); }
+stadium: STADIUM STRING OPEN_BRACE stadiumData CLOSE_BRACE			{ $$ = ExpressionStadiumSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = ExpressionStadiumDataSemanticAction(currentCompilerState(), $1); }
+stadiumDatas: stadiumData stadiumData								{ $$ = ExpressionStadiumDataSemanticAction(currentCompilerState(), $1, $2); }
+	| stadiumData													{ $$ = ExpressionStadiumDataSemanticAction(currentCompilerState(), $1); }
+
+stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = ExpressionStadiumDataSemanticAction(currentCompilerState(), $1, $3); }
 	| photo															{ $$ = ExpressionStadiumDataSemanticAction(currentCompilerState(), $1); }
-	| stadiumData stadiumData										{ $$ = ExpressionStadiumDataSemanticAction(currentCompilerState(), $1); }
 	;
 
-badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionBadgeSemanticAction(currentCompilerState(), $2, $5); }
+badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionBadgeSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
 photo: iPHOTO COLON URL SEMICOLON									{ $$ = ExpressionPhotoSemanticAction(currentCompilerState(), $3); }
 	;
 
-lineup: LINEUP STRING OPEN_BRACE elements CLOSE_BRACE			{ $$ = ExpressionLineupSemanticAction(currentCompilerState(), $2, $4, $5); }
+lineup: LINEUP STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = ExpressionLineupSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-homekit: HOMEKIT STRING OPEN_BRACE elements CLOSE_BRACE			{ $$ = ExpressionHomekitSemanticAction(currentCompilerState(), $2, $4, $5); }
+homekit: HOMEKIT STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionHomekitSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-ball: BALL STRING OPEN_BRACE elements CLOSE_BRACE				{ $$ = ExpressionBallSemanticAction(currentCompilerState(), $2, $4, $5); }
+ball: BALL STRING OPEN_BRACE photo CLOSE_BRACE						{ $$ = ExpressionBallSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-special: SPECIAL STRING OPEN_BRACE elements CLOSE_BRACE			{ $$ = ExpressionSpecialSemanticAction(currentCompilerState(), $2, $4, $5); }
+special: SPECIAL STRING OPEN_BRACE photo CLOSE_BRACE				{ $$ = ExpressionSpecialSemanticAction(currentCompilerState(), $2, $4); }
 	;
-
-
 
 %%
 

@@ -16,7 +16,7 @@ void shutdownCalculatorModule() {
 
 /** PRIVATE FUNCTIONS */
 
-static BinaryOperator _expressionTypeToBinaryOperator(const ExpressionType type);
+/* static BinaryOperator _expressionTypeToBinaryOperator(const ExpressionType type); */
 static ComputationResult _invalidBinaryOperator(const int x, const int y);
 static ComputationResult _invalidComputation();
 
@@ -25,7 +25,7 @@ static ComputationResult _invalidComputation();
  * possible, returns a binary operator that always returns an invalid
  * computation result.
  */
-static BinaryOperator _expressionTypeToBinaryOperator(const ExpressionType type) {
+/* static BinaryOperator _expressionTypeToBinaryOperator(const ExpressionType type) {
 	switch (type) {
 		case ADDITION: return add;
 		case DIVISION: return divide;
@@ -35,7 +35,7 @@ static BinaryOperator _expressionTypeToBinaryOperator(const ExpressionType type)
 			logError(_logger, "The specified expression type cannot be converted into character: %d", type);
 			return _invalidBinaryOperator;
 	}
-}
+} */
 
 /**
  * A binary operator that always returns an invalid computation result.
@@ -94,7 +94,7 @@ ComputationResult subtract(const int minuend, const int subtract) {
 	return computationResult;
 }
 
-ComputationResult computeConstant(Constant * constant) {
+/* ComputationResult computeConstant(Constant * constant) {
 	ComputationResult computationResult = {
 		.succeed = true,
 		.value = constant->value
@@ -134,3 +134,4 @@ ComputationResult computeFactor(Factor * factor) {
 			return _invalidComputation();
 	}
 }
+ */

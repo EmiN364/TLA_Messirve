@@ -19,15 +19,19 @@
  * @see https://westes.github.io/flex/manual/Patterns.html
  */
 
+digit     [[:digit:]]
+integer   {digit}+
+float     {integer}\.{integer}
+alnum     [[:alnum:]]
+space     [[:space:]]
+punct     [[:punct:]]
+string    ({alnum}|{space}|{punct})+
+date      {digit}{digit}\/{digit}{digit}\/{digit}{digit}{digit}{digit}
+url       (http|https):\/\/({string})(\.png|\.jpg|\.jpeg)
+
 %%
 
-integer [[:digit:]]+
-float integer"."integer
-string ([[:alnum:][:space:][:punct:]])+
-date digitdigit/digitdigit/digitdigitdigitdigit
-url "http(s)?://"string"(.png|.jpg|.jpeg)"
-
-url                                 { return URLLexemeAction(createLexicalAnalyzerContext()); }
+{url}                                 { return URLLexemeAction(createLexicalAnalyzerContext()); }
 
 "//".*                              { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
@@ -59,8 +63,8 @@ url                                 { return URLLexemeAction(createLexicalAnalyz
 "{"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 "}"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 
-";"                                 { return SemicolonLexemeAction(createLexicalAnalyzerContext()); }
-":"                                 { return SemicolonLexemeAction(createLexicalAnalyzerContext()); }
+";"                                 { return SemiColonLexemeAction(createLexicalAnalyzerContext()); }
+":"                                 { return ColonLexemeAction(createLexicalAnalyzerContext()); }
 ","                                 { return CommaLexemeAction(createLexicalAnalyzerContext()); }
 
 "Country"                           { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
@@ -73,10 +77,10 @@ url                                 { return URLLexemeAction(createLexicalAnalyz
 "Name"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Brand"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 
-string                              { return StringLexemeAction(createLexicalAnalyzerContext()); }
-float                               { return FloatLexemeAction(createLexicalAnalyzerContext()); }
-date                                { return DateLexemeAction(createLexicalAnalyzerContext()); }
-integer       						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
+{string}                              { return StringLexemeAction(createLexicalAnalyzerContext()); }
+{float}                               { return FloatLexemeAction(createLexicalAnalyzerContext()); }
+{date}                                { return DateLexemeAction(createLexicalAnalyzerContext()); }
+{integer}       					  { return IntegerLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }

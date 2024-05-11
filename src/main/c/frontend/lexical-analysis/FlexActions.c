@@ -66,12 +66,6 @@ void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	}
 }
 
-Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->integer = atoi(lexicalAnalyzerContext->lexeme);
-	return INTEGER;
-}
-
 Token BraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	Token token;
@@ -101,8 +95,6 @@ Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 		token = BADGE;
 	} else if (strcmp(lexicalAnalyzerContext->lexeme, "trophy") == 0) {
 		token = TROPHY;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "country") == 0) {
-		token = COUNTRY;
 	} else if (strcmp(lexicalAnalyzerContext->lexeme, "team") == 0) {
 		token = TEAM;
 	} else if (strcmp(lexicalAnalyzerContext->lexeme, "group") == 0) {
@@ -125,7 +117,7 @@ Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	return SEMICOLON;
 }
 
-Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return COLON;
 }
@@ -143,23 +135,23 @@ Token URLLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 Token AttributeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	Token token;
-	if (strcmp(lexicalAnalyzerContext->lexeme, "country:") == 0) {
+	if (strcmp(lexicalAnalyzerContext->lexeme, "Country") == 0) {
 		token = iCOUNTRY;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "birthdate:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Birthdate") == 0) {
 		token = iBIRTHDATE;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "team:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Team") == 0) {
 		token = iTEAM;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "height:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Height") == 0) {
 		token = iHEIGHT;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "weight:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Weight") == 0) {
 		token = iWEIGHT;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "photo:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Photo") == 0) {
 		token = iPHOTO;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "capacity:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Capacity") == 0) {
 		token = iCAPACITY;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "name:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Name") == 0) {
 		token = iNAME;
-	} else if (strcmp(lexicalAnalyzerContext->lexeme, "brand:") == 0) {
+	} else if (strcmp(lexicalAnalyzerContext->lexeme, "Brand") == 0) {
 		token = iBRAND;
 	}
 	lexicalAnalyzerContext->semanticValue->token = token;
