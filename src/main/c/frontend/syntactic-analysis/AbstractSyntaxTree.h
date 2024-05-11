@@ -99,7 +99,7 @@ struct Figuritas {
 };
 
 struct Page {
-	union{
+	union {
 		Figuritas * figurita;
 		Page * next;
 	}
@@ -121,6 +121,52 @@ struct Figurita {
 		Special * special;
 	};
 	figType type;
+};
+
+struct Player {
+	char * name;
+	char * country;
+	char * birthday;
+	char * club;
+	float height;
+	float weight;
+	char * photo;
+};
+
+struct Stadium {
+	char * name;
+	int capacity;
+	char * photo;
+};
+
+struct Badge {
+	char * name;
+	char * photo;
+};
+
+struct Trophy {
+	char * name;
+	char * photo;
+};
+
+struct Lineup {
+	char * name;
+	char * photo;
+};
+
+struct HomeKit {
+	char * name;
+	char * photo;
+};
+
+struct Ball {
+	char * name;
+	char * photo;
+};
+
+struct Special {
+	char * name;
+	char * photo;
 };
 
 struct Program {

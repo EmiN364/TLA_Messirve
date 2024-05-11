@@ -23,15 +23,18 @@
 
 integer [[:digit:]]+
 float integer"."integer
-string ([[:alpha:]])|([[:space:]])|([[:punct:]])+
+string ([[:alpha:][:space:]])+([,;])
 date digitdigit/digitdigit/digitdigitdigitdigit
 url "http(s)?://"string"(.png|.jpg|.jpeg)"
 
 url                                 { return URLLexemeAction(createLexicalAnalyzerContext()); }
 
+"//".*                              { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+
 "//"        						{ BEGIN(ONELINE_COMMENT); BeginSingleLineCommentLexemeAction(createLexicalAnalyzerContext()); }
 <ONELINE_COMMENT>"\n"				{ EndSingleLineCommentLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL); }
 <ONELINE_COMMENT>[[:space:]]+		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+<ONELINE_COMMENT>[^\n]+     		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <ONELINE_COMMENT>.				    { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
 "/*"								{ BEGIN(MULTILINE_COMMENT); BeginMultilineCommentLexemeAction(createLexicalAnalyzerContext()); }
@@ -51,7 +54,6 @@ url                                 { return URLLexemeAction(createLexicalAnalyz
 "lineup"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 "homekit"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 "ball"                              { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"special"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 "special"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
 
 "{"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
