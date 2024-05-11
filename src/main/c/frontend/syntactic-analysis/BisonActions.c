@@ -119,7 +119,7 @@ Elements * MultipleElementsSemanticAction(Element * element, Elements * elements
 	return newElement;
 }
 
-Elements * SingleElementSemanticAction(Element * element){
+Elements * SingleElementsSemanticAction(Element * element){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Elements * newElement = calloc(1, sizeof(Elements));
 	newElement->element = element;
@@ -183,7 +183,7 @@ Element * SpecialElementSemanticAction(Special * special){
 	return newElement;
 }
 
-tElements * SingleTournamentElementSemanticAction(TElement * tElement){
+TElements * SingleTournamentElementSemanticAction(TElement * tElement){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	TElements * newTElement = calloc(1, sizeof(TElements));
 	newTElement->tElement = tElement;
@@ -191,7 +191,7 @@ tElements * SingleTournamentElementSemanticAction(TElement * tElement){
 	return newTElement;
 }
 
-tElements *  MultipleTournamentSemanticAction(TElement * tElement, TElements * tElements){
+TElements *  MultipleTournamentSemanticAction(TElement * tElement, TElements * tElements){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	TElements * newTElement = calloc(1, sizeof(TElements));
 	newTElement->leftTElement = tElement;
@@ -200,43 +200,42 @@ tElements *  MultipleTournamentSemanticAction(TElement * tElement, TElements * t
 	return newTElement;
 }
 
-tElement * TrophyTournamentElementSemanticAction(Trophy * trophy) {
+TElement * TrophyTournamentElementSemanticAction(Trophy * trophy) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	tElement * newTElement = calloc(1, sizeof(TElement));
+	TElement * newTElement = calloc(1, sizeof(TElement));
 	newTElement->type = TROPHY_TELEMENT_TYPE;
 	newTElement->trophy = trophy;
 	return newTElement;
 }	
 
-tElement * TeamTournamentElementSemanticAction(Team * team) {
+TElement * TeamTournamentElementSemanticAction(Team * team) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	tElement * newTElement = calloc(1, sizeof(TElement));
+	TElement * newTElement = calloc(1, sizeof(TElement));
 	newTElement->type = TEAM_TELEMENT_TYPE;
 	newTElement->team = team;
 	return newTElement;
 
 }
 
-tElement * GroupTournamentElementSemanticAction(Groups * group) {
+TElement * GroupTournamentElementSemanticAction(Group * group) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	tElement * newTElement = calloc(1, sizeof(TElement));
+	TElement * newTElement = calloc(1, sizeof(TElement));
 	newTElement->type = GROUP_TELEMENT_TYPE;
 	newTElement->group = group;
 	return newTElement;
 }
 
-tElement * StadiumTournamentElementSemanticAction(Stadium * stadium) {
+TElement * StadiumTournamentElementSemanticAction(Stadium * stadium) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	tElement * newTElement = calloc(1, sizeof(TElement));
+	TElement * newTElement = calloc(1, sizeof(TElement));
 	newTElement->type = STADIUM_TELEMENT_TYPE;
 	newTElement->stadium = stadium;
 	return newTElement;
-
 }
 
-tElement * BallTournamentElementSemanticAction(Ball * ball) {
+TElement * BallTournamentElementSemanticAction(Ball * ball) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	tElement * newTElement = calloc(1, sizeof(TElement));
+	TElement * newTElement = calloc(1, sizeof(TElement));
 	newTElement->type = BALL_TELEMENT_TYPE;
 	newTElement->ball = ball;
 	return newTElement;
@@ -261,14 +260,14 @@ Group * GroupSemanticAction(char * name, Teams * teams){
 
 Teams * MultipleTeamsSemanticAction(Team * team, Teams * teams){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Teams * newTeam = calloc(1, sizeof(Teams));
+	Teams * newTeams = calloc(1, sizeof(Teams));
 	newTeams->leftTeam = team;
 	newTeams->teams = teams;
 	newTeams->type = MULTIPLE;
 	return newTeams;
 }
 
-Teams * SingleTeamProgramSemanticAction(Team * team){
+Teams * SingleTeamsSemanticAction(Team * team){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Teams * newTeams = calloc(1, sizeof(Teams));
 	newTeams->team = team;
@@ -317,11 +316,11 @@ TTeam * LineupTTeamSemanticAction(Lineup * lineup){
 	return newTTeam;
 }
 
-TTeam * HomekitTTeamSemanticAction(Homekit * homekit){
+TTeam * HomekitTTeamSemanticAction(HomeKit * homekit){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	TTeam * newTTeam = calloc(1, sizeof(TTeam));
 	newTTeam->type = HOMEKIT_TTEAM_TYPE;
-	newTTeam->homekit = homekit;
+	newTTeam->homeKit = homekit;
 	return newTTeam;
 
 }
@@ -334,7 +333,7 @@ TTeam * PlayerTTeamSemanticAction(Player * player){
 	return newTTeam;
 }
 
-Player * PlayerSemanticAction(char * name, playerDatas * playerDatas){
+Player * PlayerSemanticAction(char * name, PlayerDatas * playerDatas){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Player * player = calloc(1, sizeof(Player));
 	player->name = name;
@@ -363,7 +362,7 @@ PlayerData * PlayerDataStringSemanticAction(char * value){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	PlayerData * playerData = calloc(1, sizeof(PlayerData));
 	playerData->type = PLAYER_TYPE_STRING;
-	playerData->value = name;
+	playerData->value = value;
 	return playerData;
 }
 
@@ -385,7 +384,7 @@ PlayerTypeString * PlayerTypeCountrySemanticAction(){
 PlayerTypeString * PlayerTypeBirthdaySemanticAction(){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	PlayerTypeString * playerTypeString = calloc(1, sizeof(PlayerTypeString));
-	playerTypeString->type = PLAYER_BIRTHDAY;
+	playerTypeString->type = PLAYER_BIRTHDATE;
 	return playerTypeString;
 }
 
@@ -481,12 +480,12 @@ Lineup * LineupSemanticAction(char * name, Photo * photo){
 	return lineup;
 }
 
-homekit * HomekitSemanticAction(char * name, Photo * photo){
+HomeKit * HomekitSemanticAction(char * name, Photo * photo){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Homekit * homekit = calloc(1, sizeof(Homekit));
-	homekit->name = name;
-	homekit->photo = photo;
-	return homekit;
+	HomeKit * hk = calloc(1, sizeof(HomeKit));
+	hk->name = name;
+	hk->photo = photo;
+	return hk;
 }
 
 Ball * BallSemanticAction(char * name, Photo * photo){

@@ -36,7 +36,7 @@ Tournament * TournamentSemanticAction(char * tournamentName, TElements * tElemen
 
 Elements * MultipleElementsSemanticAction(Element * element, Elements * elements);
 
-Elements * SingleElementSemanticAction(Element * element);
+Elements * SingleElementsSemanticAction(Element * element);
 
 Element * TrophyElementSemanticAction(Trophy * trophy);
 
@@ -52,19 +52,19 @@ Element * BallElementSemanticAction(Ball * ball);
 
 Element * SpecialElementSemanticAction(Special * special);
 
-tElements * SingleTournamentElementSemanticAction(TElement * tElement);
+TElements * SingleTournamentElementSemanticAction(TElement * tElement);
 
-tElements *  MultipleTournamentSemanticAction(TElement * tElement, TElements * tElements);
+TElements *  MultipleTournamentSemanticAction(TElement * tElement, TElements * tElements);
 
-tElement * TrophyTournamentElementSemanticAction(Trophy * trophy);
+TElement * TrophyTournamentElementSemanticAction(Trophy * trophy);
 
-tElement * TeamTournamentElementSemanticAction(Team * team);
+TElement * TeamTournamentElementSemanticAction(Team * team);
 
-tElement * GroupTournamentElementSemanticAction(Groups * group);
+TElement * GroupTournamentElementSemanticAction(Group * group);
 
-tElement * StadiumTournamentElementSemanticAction(Stadium * stadium);
+TElement * StadiumTournamentElementSemanticAction(Stadium * stadium);
 
-tElement * BallTournamentElementSemanticAction(Ball * ball);
+TElement * BallTournamentElementSemanticAction(Ball * ball);
 
 Trophy * TrophySemanticAction(char * name, Photo * photo);
 
@@ -72,7 +72,7 @@ Group * GroupSemanticAction(char * name, Teams * teams);
 
 Teams * MultipleTeamsSemanticAction(Team * team, Teams * teams);
 
-Teams * SingleTeamProgramSemanticAction(Team * team);
+Teams * SingleTeamsSemanticAction(Team * team);
 
 Team * TeamSemanticAction(char * name, TTeams * tTeams);
 
@@ -84,11 +84,11 @@ TTeam * BadgeTTeamSemanticAction(Badge * badge);
 
 TTeam * LineupTTeamSemanticAction(Lineup * lineup);
 
-TTeam * HomekitTTeamSemanticAction(Homekit * homekit);
+TTeam * HomekitTTeamSemanticAction(HomeKit * homekit);
 
 TTeam * PlayerTTeamSemanticAction(Player * player);
 
-Player * PlayerSemanticAction(char * name, playerDatas * playerDatas);
+Player * PlayerSemanticAction(char * name, PlayerDatas * playerDatas);
 
 PlayerDatas * SinglePlayerDatasSemanticAction(PlayerData * playerData);
 
@@ -118,15 +118,15 @@ StadiumDatas * MultipleStadiumDatasSemanticAction(StadiumData * stadiumData, Sta
 
 StadiumData * StadiumDataSemanticAction(int value);
 
-StadiumData * StadiumDataPhotoSemanticAction(photo * photo);
+StadiumData * StadiumDataPhotoSemanticAction(Photo * photo);
 
-Badge * BadgeSemanticAction(char * name, photo * photo);
+Badge * BadgeSemanticAction(char * name, Photo * photo);
 
 Photo * PhotoSemanticAction(char * value);
 
 Lineup * LineupSemanticAction(char * name, Photo * photo);
 
-Homekit * HomekitSemanticAction(char * name, Photo * photo);
+HomeKit * HomekitSemanticAction(char * name, Photo * photo);
 
 Ball * BallSemanticAction(char * name, Photo * photo);
 

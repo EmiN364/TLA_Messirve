@@ -30,7 +30,6 @@ typedef struct HomeKit HomeKit;
 typedef struct Ball Ball;
 typedef struct Special Special;
 typedef struct Team Team;
-typedef struct Groups Groups;
 typedef struct Group Group;
 typedef struct StadiumDatas StadiumDatas;
 typedef struct StadiumData StadiumData;
@@ -42,7 +41,7 @@ typedef struct Teams Teams;
 typedef struct TTeams TTeams;
 typedef struct TTeam TTeam;
 typedef struct Photo Photo;
-typedef struct Homekit Homekit;
+typedef struct HomeKit HomeKit;
 
 typedef struct Page Page;
 typedef struct Figuritas Figuritas;
@@ -110,7 +109,7 @@ typedef enum StadiumDataType {
 
 struct Program {
 	Expression * expression;
-}
+};
 
 struct Expression {
 	union {
@@ -164,7 +163,7 @@ struct TElement {
 	union {
 		Trophy * trophy;
 		Team * team;
-		Groups * group;
+		Group * group;
 		Stadium * stadium;
 		Ball * ball;
 	};
@@ -218,7 +217,7 @@ struct TTeam {
 	TTeamType type;
 };
 
-struct player {
+struct Player {
 	char * name;
 	PlayerDatas * playerDatas;
 };
@@ -256,7 +255,7 @@ struct PlayerTypeFloat {
 	PlayerTypeFloatType type;
 };
 
-struct stadium {
+struct Stadium {
 	char * name;
 	StadiumDatas * stadiumDatas;
 };

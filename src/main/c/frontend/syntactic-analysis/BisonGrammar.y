@@ -38,7 +38,7 @@
 	TTeams * tTeams;
 	TTeam * tTeam;
 	Lineup * lineup;
-	Homekit * homekit;
+	HomeKit * homekit;
 	Ball * ball;
 	Special * special;
 	Photo * photo;
@@ -140,7 +140,7 @@ tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = Tournamen
 	;
 
 elements: element COMMA elements									{ $$ = MultipleElementsSemanticAction($1, $3); }
-	| element														{ $$ = SimpleElementsSemanticAction($1); }
+	| element														{ $$ = SingleElementsSemanticAction($1); }
 	;
 
 element: trophy														{ $$ = TrophyElementSemanticAction($1); }
@@ -169,8 +169,8 @@ trophy: TROPHY STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = TrophySemanticActi
 group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = GroupSemanticAction($2, $4); }
 	;
 
-teams: team COMMA teams												{ $$ = MultipleTeamSemanticAction($1, $3); }
-	| team															{ $$ = SingleTeamProgramSemanticAction($1); }
+teams: team COMMA teams												{ $$ = MultipleTeamsSemanticAction($1, $3); }
+	| team															{ $$ = SingleTeamsSemanticAction($1); }
 	;
 
 team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = TeamSemanticAction($2, $4);}
@@ -221,7 +221,7 @@ stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = StadiumDataSemanticAc
 badge: BADGE STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = BadgeSemanticAction($2, $4); }
 	;
 
-photo: iPHOTO COLON URL COLON STRING SEMICOLON						{ $$ = PhotoSemanticAction($3); }
+photo: iPHOTO COLON URL COLON STRING SEMICOLON						{ $$ = PhotoSemanticAction($5); }
 	;
 
 lineup: LINEUP STRING OPEN_BRACE photo CLOSE_BRACE					{ $$ = LineupSemanticAction($2, $4); }
