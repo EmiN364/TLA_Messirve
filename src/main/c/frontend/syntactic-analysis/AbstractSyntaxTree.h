@@ -14,10 +14,6 @@ void shutdownAbstractSyntaxTreeModule();
  * This typedefs allows self-referencing types.
  */
 
-typedef enum ProgamType ProgamType;
-typedef enum TElementType TElementType;
-typedef enum ElementType ElementType;
-
 typedef struct Program Program;
 typedef struct Tournament Tournament;
 typedef struct TElements TElements;
@@ -54,27 +50,63 @@ typedef struct Figuritas Figuritas;
  * Node types for the Abstract Syntax Tree (AST).
  */
 
-enum ProgamType {
+typedef enum ProgamType {
 	TOURNAMENT_TYPE,
 	ELEMENTS_TYPE
-};
+} ProgamType;
 
-enum TElementType {
-	TROPHY_TYPE,
-	TEAM_TYPE,
-	GROUPS_TYPE,
-	STADIUM_TYPE,
-	BALL_TYPE
-};
+typedef enum SingleOrMultiple {
+	SINGLE,
+	MULTIPLE
+} SingleOrMultiple;
 
-enum ElementType {
-	TROPHY_TYPE2,
-	TEAM_TYPE2,
-	STADIUM_TYPE2,
-	BADGE_TYPE2,
-	PLAYER_TYPE2,
-	BALL_TYPE2
-};
+typedef enum ElementType {
+	TROPHY_ELEMENT_TYPE,
+	TEAM_ELEMENT_TYPE,
+	STADIUM_ELEMENT_TYPE,
+	BADGE_ELEMENT_TYPE,
+	PLAYER_ELEMENT_TYPE,
+	BALL_ELEMENT_TYPE,
+	SPECIAL_ELEMENT_TYPE
+} ElementType;
+
+typedef enum TElementType {
+	TROPHY_TELEMENT_TYPE,
+	TEAM_TELEMENT_TYPE,
+	GROUP_TELEMENT_TYPE,
+	STADIUM_TELEMENT_TYPE,
+	BALL_TELEMENT_TYPE
+} TElementType;
+
+typedef enum TTeamType {
+	BADGE_TTEAM_TYPE,
+	LINEUP_TTEAM_TYPE,
+	HOMEKIT_TTEAM_TYPE,
+	PLAYER_TTEAM_TYPE
+} TTeamType;
+
+typedef enum PlayerDataType {
+	PLAYER_TYPE_STRING,
+	PLAYER_TYPE_FLOAT
+} PlayerDataType;
+
+typedef enum PlayerTypeStringType {
+	PLAYER_COUNTRY,
+	PLAYER_BIRTHDATE,
+	PLAYER_TEAM,
+	PLAYER_PHOTO
+} PlayerTypeStringType;
+
+typedef enum PlayerTypeFloatType {
+	PLAYER_HEIGHT,
+	PLAYER_WEIGHT
+} PlayerTypeFloatType;
+
+typedef enum StadiumDataType {
+	STADIUM_CAPACITY,
+	STADIUM_PHOTO
+} StadiumDataType;
+
 
 struct Program {
 	union {
@@ -84,34 +116,20 @@ struct Program {
 	ProgamType type;
 };
 
-struct Elements {
-	union {
-		struct {
-			Element * left_element;
-			Element * right_element;
-		};
-		Element * element;
-	};
-	ElementType type;
-};
-
 struct Tournament {
+	char * name;
 	TElements * tElements;
 };
 
-struct TElements {
-	TElement ** tElements;
-};
-
-struct TElement {
+struct Elements {
 	union {
-		Trophy * trophy;
-		Team * team;
-		Groups * groups;
-		Stadium * stadium;
-		Ball * ball;
+		struct {
+			Element * leftElement;
+			Elements * elements;
+		};
+		Element * element;
 	};
-	TElementType type;
+	SingleOrMultiple type;
 };
 
 struct Element {
@@ -122,54 +140,169 @@ struct Element {
 		Badge * badge;
 		Player * player;
 		Ball * ball;
+		Special * special;
 	};
 	ElementType type;
 };
 
-struct Player {
-	char * name;
-	char * country;
-	char * birthday;
-	char * team;
-	float height;
-	float weight;
-	char * photo;
+struct TElements {
+	union {
+		struct {
+			TElement * leftTElement;
+			TElements * tElements;
+		};
+		TElement * tElement;
+	};
+	SingleOrMultiple type;
 };
 
-struct Stadium {
-	char * name;
-	int capacity;
-	char * photo;
-};
-
-struct Badge {
-	char * name;
-	char * photo;
+struct TElement {
+	union {
+		Trophy * trophy;
+		Team * team;
+		Groups * group;
+		Stadium * stadium;
+		Ball * ball;
+	};
+	TElementType type;
 };
 
 struct Trophy {
 	char * name;
-	char * photo;
+	Photo * photo;
+};
+
+struct Group {
+	char * name;
+	Teams * teams;
+};
+
+struct Teams {
+	union {
+		struct {
+			Team * leftTeam;
+			Teams * teams;
+		};
+		Team * team;
+	};
+	SingleOrMultiple type;
+};
+
+struct Team {
+	char * name;
+	TTeam * tTeam;
+};
+
+struct TTeams {
+	union {
+		struct {
+			TTeam * leftTTeam;
+			TTeams * tTeams;
+		};
+		TTeam * tTeam;
+	};
+	SingleOrMultiple type;
+};
+
+struct TTeam {
+	union {
+		Badge * badge;
+		Lineup * lineup;
+		HomeKit * homeKit;
+		Player * player;
+	};
+	TTeamType type;
+};
+
+struct player {
+	char * name;
+	PlayerDatas * playerDatas;
+};
+
+struct PlayerDatas {
+	union {
+		struct {
+			PlayerData * leftPlayerData;
+			PlayerDatas * playerDatas;
+		};
+		PlayerData * playerData;
+	};
+	SingleOrMultiple type;
+};
+
+struct PlayerData {
+	union {
+		struct {
+			PlayerTypeString * playerTypeString;
+			char * value;
+		};
+		struct {
+			PlayerTypeFloat * playerTypeFloat;
+			float floatValue;
+		};
+	};
+	PlayerDataType type;
+};
+
+struct PlayerTypeString {
+	PlayerTypeStringType type;
+};
+
+struct PlayerTypeFloat {
+	PlayerTypeFloatType type;
+};
+
+struct stadium {
+	char * name;
+	StadiumDatas * stadiumDatas;
+};
+
+struct StadiumDatas {
+	union {
+		struct {
+			StadiumData * leftStadiumData;
+			StadiumDatas * stadiumDatas;
+		};
+		StadiumData * stadiumData;
+	};
+	SingleOrMultiple type;
+};
+
+struct StadiumData {
+	union {
+		int capacity;
+		Photo * photo;
+	};
+	StadiumDataType type;
+};
+
+struct Badge {
+	char * name;
+	Photo * photo;
 };
 
 struct Lineup {
 	char * name;
-	char * photo;
+	Photo * photo;
 };
 
 struct HomeKit {
 	char * name;
-	char * photo;
+	Photo * photo;
 };
 
 struct Ball {
 	char * name;
-	char * photo;
+	Photo * photo;
 };
 
 struct Special {
 	char * name;
-	char * photo;
+	Photo * photo;
+};
+
+struct Photo {
+	char * url;
 };
 
 /**
