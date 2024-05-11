@@ -139,7 +139,7 @@ program: tournament													{ $$ = ExpressionProgramSemanticAction(currentCo
 tournament: TOURNAMENT STRING OPEN_BRACE tElements CLOSE_BRACE		{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-elements: elements COMMA element											{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+elements: element COMMA elements									{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
 	| element														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
@@ -149,10 +149,11 @@ element: trophy														{ $$ = ExpressionProgramSemanticAction(currentCompi
 	| badge															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	| player														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	| ball															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+	| special 														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
 tElements: tElement													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	| tElements COMMA tElement											{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+	| tElement COMMA tElements										{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
 	;
 
 tElement: trophy													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
@@ -165,14 +166,14 @@ tElement: trophy													{ $$ = ExpressionProgramSemanticAction(currentCompi
 trophy: TROPHY OPEN_BRACE photo CLOSE_BRACE							{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $3); }
 	;
 
-groups: groups COMMA group												{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+groups: group COMMA groups												{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
 	| group															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
 group: GROUP STRING OPEN_BRACE teams CLOSE_BRACE					{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-teams: teams COMMA team													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+teams: team COMMA teams													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
 	| team															{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
@@ -180,7 +181,7 @@ team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = ExpressionProgramSem
 	;
 
 tTeams: tTeam														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }	
-	| tTeams COMMA tTeam													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+	| tTeam COMMA tTeams													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
 
 tTeam: badge														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	| lineup														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
@@ -191,7 +192,7 @@ tTeam: badge														{ $$ = ExpressionProgramSemanticAction(currentCompiler
 player: PLAYER STRING OPEN_BRACE playerDatas CLOSE_BRACE				{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-playerDatas: playerData playerData									{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+playerDatas: playerData playerDatas									{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
 	| playerData													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 
 playerData: playerTypeString COLON STRING SEMICOLON					{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }
@@ -208,10 +209,10 @@ playerTypeFloat: iHEIGHT											{ $$ = ExpressionProgramSemanticAction(curren
 	| iWEIGHT														{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
-stadium: STADIUM STRING OPEN_BRACE stadiumData CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
+stadium: STADIUM STRING OPEN_BRACE stadiumDatas CLOSE_BRACE			{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $2, $4); }
 	;
 
-stadiumDatas: stadiumData stadiumData								{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
+stadiumDatas: stadiumData stadiumDatas								{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $2); }
 	| stadiumData													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 
 stadiumData: iCAPACITY COLON INTEGER SEMICOLON						{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1, $3); }

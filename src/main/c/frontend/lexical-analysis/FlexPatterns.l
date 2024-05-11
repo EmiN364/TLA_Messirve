@@ -11,6 +11,8 @@
 
 %x MULTILINE_COMMENT
 %x ONELINE_COMMENT
+%x STRING
+%x NAME
 
 /**
  * Reusable patterns.
@@ -19,15 +21,22 @@
  * @see https://westes.github.io/flex/manual/Patterns.html
  */
 
+/**
+ * "//"        						{ BEGIN(ONELINE_COMMENT); BeginSingleLineCommentLexemeAction(createLexicalAnalyzerContext()); }
+ * <ONELINE_COMMENT>"\n"				{ EndSingleLineCommentLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL); }
+ * <ONELINE_COMMENT>[[:space:]]+		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+ * <ONELINE_COMMENT>[^\n]+     		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+ * <ONELINE_COMMENT>.				    { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+ */
+
 digit     [[:digit:]]
 integer   {digit}+
 float     {integer}\.{integer}
 alnum     [[:alnum:]]
 space     [[:space:]]
-punct     [[:punct:]]
-string    ({alnum}|{space}|{punct})+
+string    {alnum}({alnum}|{space}|\.\/)*{alnum}
 date      {digit}{digit}\/{digit}{digit}\/{digit}{digit}{digit}{digit}
-url       (http|https):\/\/({string})(\.png|\.jpg|\.jpeg)
+url       http(s)?:\/\/[[:alnum:]\/](\.png|\.jpg|\.jpeg)
 
 %%
 
@@ -35,36 +44,30 @@ url       (http|https):\/\/({string})(\.png|\.jpg|\.jpeg)
 
 "//".*                              { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
-"//"        						{ BEGIN(ONELINE_COMMENT); BeginSingleLineCommentLexemeAction(createLexicalAnalyzerContext()); }
-<ONELINE_COMMENT>"\n"				{ EndSingleLineCommentLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL); }
-<ONELINE_COMMENT>[[:space:]]+		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-<ONELINE_COMMENT>[^\n]+     		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-<ONELINE_COMMENT>.				    { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-
 "/*"								{ BEGIN(MULTILINE_COMMENT); BeginMultilineCommentLexemeAction(createLexicalAnalyzerContext()); }
 <MULTILINE_COMMENT>"*/"				{ EndMultilineCommentLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL); }
 <MULTILINE_COMMENT>[[:space:]]+		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <MULTILINE_COMMENT>[^*]+			{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <MULTILINE_COMMENT>.				{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
-"player"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"tournament"                        { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"stadium"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"badge"                             { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"trophy"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"country"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"team"                              { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"group"                             { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"lineup"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"homekit"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"ball"                              { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
-"special"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); }
+"player"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"tournament"                        { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"stadium"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"badge"                             { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"trophy"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"country"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"team"                              { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"group"                             { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"lineup"                            { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"homekit"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"ball"                              { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
+"special"                           { return KeywordLexemeAction(createLexicalAnalyzerContext()); BEGIN(NAME); }
 
 "{"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 "}"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 
-";"                                 { return SemiColonLexemeAction(createLexicalAnalyzerContext()); }
-":"                                 { return ColonLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>";"                         { BEGIN(INITIAL); return SemiColonLexemeAction(createLexicalAnalyzerContext()); }
+":"                                 { return ColonLexemeAction(createLexicalAnalyzerContext()); BEGIN(STRING); }
 ","                                 { return CommaLexemeAction(createLexicalAnalyzerContext()); }
 
 "Country"                           { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
@@ -77,10 +80,14 @@ url       (http|https):\/\/({string})(\.png|\.jpg|\.jpeg)
 "Name"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Brand"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 
-{string}                              { return StringLexemeAction(createLexicalAnalyzerContext()); }
-{float}                               { return FloatLexemeAction(createLexicalAnalyzerContext()); }
-{date}                                { return DateLexemeAction(createLexicalAnalyzerContext()); }
-{integer}       					  { return IntegerLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>{float}                     { return FloatLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>{integer}       		    { return IntegerLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>{date}                      { return DateLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>{string}                    { return StringLexemeAction(createLexicalAnalyzerContext()); }
+
+<NAME>{string}                      { return StringLexemeAction(createLexicalAnalyzerContext()); }
+<NAME>"{"                           { BEGIN(INITIAL); return BraceLexemeAction(createLexicalAnalyzerContext()); }
+<NAME>[[:space:]]+                 { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
