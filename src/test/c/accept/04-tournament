@@ -22,6 +22,13 @@ tournament Copa America {
     trophy {
         Photo: http://foto.google.com/trofeo_copa.png;
     },
+    stadium Lusail Stadium {
+        Capacity: 88966;
+        Photo: http://foto.google.com/FotoDelLusailEnHd.jpg;
+    },
+    ball Jabulani {
+        Photo: http://foto.google.com/FotoDeLaJabulaniEnHd.jpg;
+    },
     group A {
         team Argentina {
             badge { // Creación de figurita del escudo de Argentina
@@ -40,6 +47,72 @@ tournament Copa America {
                 Weight: 82;
                 Team: Sport Lisboa e Benfica;
                 Photo: http://foto.google.com/dimaria.png;
+            },
+            player Lionel Messi { // Creación de figurita de Messi
+                Birthdate: 24/6/1987;
+                Height: 1.69;
+                Weight: 67;
+                Team: Inter Miami CF;
+                Photo: http://foto.google.com/messi.png;
+            }
+        },
+        team Mexico {
+            badge { // Creación de figurita del escudo de Mexico
+                Photo: http://foto.google.com/fmf.png;
+            },
+            player Javier Hernandez { // Creación de figurita de Chicharito
+                Birthdate: 1/6/1988;
+                Height: 1.75;
+                Weight: 73;
+                Team: Manchester United;
+                Photo: http://foto.google.com/chicharito.png;
+            },
+            player Andres Guardado { // Creación de figurita de Guardado
+                Birthdate: 28/9/1986;
+                Height: 1.69;
+                Weight: 64;
+                Team: Valencia CF;
+                Photo: http://foto.google.com/guardado.png;
+            }
+        },
+        team Uruguay {
+            badge { // Creación de figurita del escudo de Uruguay
+                Photo: http://foto.google.com/auuf.png;
+            },
+            player Diego Forlan { // Creación de figurita de Forlan
+                Birthdate: 19/5/1979;
+                Height: 1.80;
+                Weight: 75;
+                Team: Cerezo Osaka;
+                Photo: http://foto.google.com/forlan.png;
+            },
+            player Luis Suarez { // Creación de figurita de Suarez
+                Birthdate: 24/1/1987;
+                Height: 1.82;
+                Weight: 86;
+                Team: Liverpool FC;
+                Photo: http://foto.google.com/suarez.png;
+            }
+        } 
+    },
+    group B {
+        team Colombia {
+            badge { // Creación de figurita del escudo de Colombia
+                Photo: http://foto.google.com/fcf.png;
+            },
+            player James Rodriguez { // Creación de figurita de James Rodriguez
+                Birthdate: 12/7/1991;
+                Height: 1.80;
+                Weight: 75;
+                Team: AS Monaco;
+                Photo: http://foto.google.com/james.png;
+            },
+            player Radamel Falcao { // Creación de figurita de Falcao
+                Birthdate: 10/2/1986;
+                Height: 1.77;
+                Weight: 72;
+                Team: AS Monaco;
+                Photo: http://foto.google.com/falcao.png;
             }
         },
         team Brasil; // Already defined elsewhere
