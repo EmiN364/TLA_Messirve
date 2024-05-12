@@ -311,11 +311,32 @@ struct Photo {
 /**
  * Node recursive destructors.
  */
-/* void releaseConstant(Constant * constant);
-void releaseExpression(Expression * expression);
-void releaseFactor(Factor * factor); */
-void releaseTElement(TElement * tElement);
-void releaseTournament(Tournament * tournament);
 void releaseProgram(Program * program);
+void releaseExpression(Expression * expression);
+void releaseTournament(Tournament * tournament);
+void releaseElements(Elements * elements);
+void releaseElement(Element * element);
+void releaseTElements(TElements * tElements);
+void releaseTElement(TElement * tElement);
+void releaseTrophy(Trophy * trophy);
+void releaseGroup(Group * group);
+void releaseTeams(Teams * teams);
+void releaseTeam(Team * team);
+void releaseTTeams(TTeams * tTeams);
+void releaseTTeam(TTeam * tTeam);
+void releasePlayer(Player * player);
+void releasePlayerDatas(PlayerDatas * playerDatas);
+void releasePlayerData(PlayerData * playerData);
+void releasePlayerTypeString(PlayerTypeString * playerTypeString);
+void releasePlayerTypeFloat(PlayerTypeFloat * playerTypeFloat);
+void releaseStadium(Stadium * stadium);
+void releaseStadiumDatas(StadiumDatas * stadiumDatas);
+void releaseStadiumData(StadiumData * stadiumData);
+void releaseBadge(Badge * badge);
+void releaseLineup(Lineup * lineup);
+void releaseHomeKit(HomeKit * homeKit);
+void releaseBall(Ball * ball);
+void releaseSpecial(Special * special);
+void releasePhoto(Photo * photo);
 
 #endif
