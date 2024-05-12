@@ -115,6 +115,6 @@ tournament Copa America {
                 Photo: http://foto.google.com/falcao.png;
             }
         },
-        team Brasil; // Already defined elsewhere
+        team Brasil // Already defined elsewhere
     }
 }

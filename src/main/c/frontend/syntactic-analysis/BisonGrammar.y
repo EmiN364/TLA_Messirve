@@ -170,7 +170,7 @@ teams: team COMMA teams												{ $$ = MultipleTeamsSemanticAction($1, $3); }
 	;
 
 team: TEAM STRING OPEN_BRACE tTeams CLOSE_BRACE						{ $$ = TeamSemanticAction($2, $4);}
-	| TEAM STRING SEMICOLON											{ $$ = TeamSemanticAction($2, NULL); }
+	| TEAM STRING													{ $$ = TeamSemanticAction($2, NULL); }
 	;
 
 tTeams: tTeam														{ $$ = SingleTTeamsSemanticAction($1); }	

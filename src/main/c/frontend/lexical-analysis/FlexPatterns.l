@@ -40,7 +40,6 @@ url       https?:\/\/[[:alnum:][:punct:]]*\.(jpg|png|jpeg|gif|svg)
 
 %%
 
-<STRING>{url}                       { return URLLexemeAction(createLexicalAnalyzerContext()); }
 
 <*>"//".*                            { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
@@ -67,6 +66,7 @@ url       https?:\/\/[[:alnum:][:punct:]]*\.(jpg|png|jpeg|gif|svg)
 "}"                                 { return BraceLexemeAction(createLexicalAnalyzerContext()); }
 
 <STRING>";"                         { BEGIN(INITIAL); return SemiColonLexemeAction(createLexicalAnalyzerContext()); }
+";"                                 { return SemiColonLexemeAction(createLexicalAnalyzerContext()); }
 ":"                                 { BEGIN(STRING); return ColonLexemeAction(createLexicalAnalyzerContext()); }
 ","                                 { return CommaLexemeAction(createLexicalAnalyzerContext()); }
 
@@ -80,15 +80,15 @@ url       https?:\/\/[[:alnum:][:punct:]]*\.(jpg|png|jpeg|gif|svg)
 "Name"                              { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 "Brand"                             { return AttributeLexemeAction(createLexicalAnalyzerContext()); }
 
+<STRING>{url}                       { return URLLexemeAction(createLexicalAnalyzerContext()); }
 <STRING>{date}                      { return DateLexemeAction(createLexicalAnalyzerContext()); }
 <STRING>{float}                     { return FloatLexemeAction(createLexicalAnalyzerContext()); }
 <STRING>{integer}       		    { return IntegerLexemeAction(createLexicalAnalyzerContext()); }
 <STRING>{string}                    { return StringLexemeAction(createLexicalAnalyzerContext()); }
 
-<NAME>{string}                      { return StringLexemeAction(createLexicalAnalyzerContext()); }
+<NAME>{string}                      { BEGIN(INITIAL); return StringLexemeAction(createLexicalAnalyzerContext()); }
 <NAME>"{"                           { BEGIN(INITIAL); return BraceLexemeAction(createLexicalAnalyzerContext()); }
-<NAME>[[:space:]]+                  { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-<NAME>";"                           { BEGIN(INITIAL); return SemiColonLexemeAction(createLexicalAnalyzerContext()); }
+<NAME>[[:space:]]+					{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
