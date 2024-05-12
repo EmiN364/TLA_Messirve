@@ -37,6 +37,7 @@ typedef struct PlayerDatas PlayerDatas;
 typedef struct PlayerData PlayerData;
 typedef struct PlayerTypeString PlayerTypeString;
 typedef struct PlayerTypeFloat PlayerTypeFloat;
+typedef struct PlayerTypeDate PlayerTypeDate;
 typedef struct Teams Teams;
 typedef struct TTeams TTeams;
 typedef struct TTeam TTeam;
@@ -50,11 +51,6 @@ typedef struct Figuritas Figuritas;
  * Node types for the Abstract Syntax Tree (AST).
  */
 
-typedef enum ExpressionType {
-	TOURNAMENT_TYPE,
-	ELEMENTS_TYPE
-} ExpressionType;
-
 typedef enum SingleOrMultiple {
 	SINGLE,
 	MULTIPLE
@@ -67,7 +63,8 @@ typedef enum ElementType {
 	BADGE_ELEMENT_TYPE,
 	PLAYER_ELEMENT_TYPE,
 	BALL_ELEMENT_TYPE,
-	SPECIAL_ELEMENT_TYPE
+	SPECIAL_ELEMENT_TYPE,
+	TOURNAMENT_ELEMENT_TYPE
 } ElementType;
 
 typedef enum TElementType {
@@ -87,14 +84,14 @@ typedef enum TTeamType {
 
 typedef enum PlayerDataType {
 	PLAYER_TYPE_STRING,
-	PLAYER_TYPE_FLOAT
+	PLAYER_TYPE_FLOAT,
+	PLAYER_TYPE_PHOTO
 } PlayerDataType;
 
 typedef enum PlayerTypeStringType {
 	PLAYER_COUNTRY,
 	PLAYER_BIRTHDATE,
-	PLAYER_TEAM,
-	PLAYER_PHOTO
+	PLAYER_TEAM
 } PlayerTypeStringType;
 
 typedef enum PlayerTypeFloatType {
@@ -108,15 +105,7 @@ typedef enum StadiumDataType {
 } StadiumDataType;
 
 struct Program {
-	Expression * expression;
-};
-
-struct Expression {
-	union {
-		Tournament * tournament;
-		Elements * elements;
-	};
-	ExpressionType type;
+	Elements * elements;
 };
 
 struct Tournament {
@@ -144,6 +133,7 @@ struct Element {
 		Player * player;
 		Ball * ball;
 		Special * special;
+		Tournament * tournament;
 	};
 	ElementType type;
 };
@@ -243,6 +233,7 @@ struct PlayerData {
 			PlayerTypeFloat * playerTypeFloat;
 			float floatValue;
 		};
+		Photo * photo;
 	};
 	PlayerDataType type;
 };
@@ -312,7 +303,6 @@ struct Photo {
  * Node recursive destructors.
  */
 void releaseProgram(Program * program);
-void releaseExpression(Expression * expression);
 void releaseTournament(Tournament * tournament);
 void releaseElements(Elements * elements);
 void releaseElement(Element * element);

@@ -41,30 +41,8 @@ void releaseFactor(Factor * factor) {
 void releaseProgram(Program * program) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (program != NULL) {
-		releaseExpression(program->expression);
+		releaseElements(program->elements);
 		free(program);
-	}
-}
-void releaseExpression(Expression * expression) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
-	if (expression != NULL) {
-		switch (expression->type) {
-			case TOURNAMENT_TYPE:
-				releaseTournament(expression->tournament);
-				break;
-			case ELEMENTS_TYPE:
-				releaseElements(expression->elements);
-				break;
-		}
-		free(expression);
-	}
-}
-void releaseTournament(Tournament * tournament) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
-	if (tournament != NULL) {
-		free(tournament->name);
-		releaseTElements(tournament->tElements);
-		free(tournament);
 	}
 }
 void releaseElements(Elements * elements) {
@@ -107,8 +85,18 @@ void releaseElement(Element * element) {
 			case SPECIAL_ELEMENT_TYPE:
 				releaseSpecial(element->special);
 				break;
+			case TOURNAMENT_ELEMENT_TYPE:
+				releaseTournament(element->tournament);
+				break;
 		}
 		free(element);
+	}
+}
+void releaseTournament(Tournament * tournament) {
+	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	if (tournament != NULL) {
+		releaseTElements(tournament->tElements);
+		free(tournament);
 	}
 }
 void releaseTElements(TElements * tElements) {
@@ -152,7 +140,6 @@ void releaseTElement(TElement * tElement) {
 void releaseTrophy(Trophy * trophy) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (trophy != NULL) {
-		free(trophy->name);
 		releasePhoto(trophy->photo);
 		free(trophy);
 	}
@@ -160,7 +147,6 @@ void releaseTrophy(Trophy * trophy) {
 void releaseGroup(Group * group) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (group != NULL) {
-		free(group->name);
 		releaseTeams(group->teams);
 		free(group);
 	}
@@ -183,7 +169,6 @@ void releaseTeams(Teams * teams) {
 void releaseTeam(Team * team) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (team != NULL) {
-		free(team->name);
 		releaseTTeams(team->tTeams);
 		free(team);
 	}
@@ -226,7 +211,6 @@ void releaseTTeam(TTeam * tTeam) {
 void releasePlayer(Player * player) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (player != NULL) {
-		free(player->name);
 		releasePlayerDatas(player->playerDatas);
 		free(player);
 	}
@@ -249,13 +233,6 @@ void releasePlayerDatas(PlayerDatas * playerDatas) {
 void releasePlayerData(PlayerData * playerData) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (playerData != NULL) {
-		switch (playerData->type) {
-			case PLAYER_TYPE_STRING:
-				free(playerData->value);
-				break;
-			case PLAYER_TYPE_FLOAT:
-				break;
-		}
 		free(playerData);
 	}
 }
@@ -274,7 +251,6 @@ void releasePlayerTypeFloat(PlayerTypeFloat * playerTypeFloat) {
 void releaseStadium(Stadium * stadium) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (stadium != NULL) {
-		free(stadium->name);
 		releaseStadiumDatas(stadium->stadiumDatas);
 		free(stadium);
 	}
@@ -310,7 +286,6 @@ void releaseStadiumData(StadiumData * stadiumData) {
 void releaseBadge(Badge * badge) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (badge != NULL) {
-		free(badge->name);
 		releasePhoto(badge->photo);
 		free(badge);
 	}
@@ -318,7 +293,6 @@ void releaseBadge(Badge * badge) {
 void releaseLineup(Lineup * lineup) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (lineup != NULL) {
-		free(lineup->name);
 		releasePhoto(lineup->photo);
 		free(lineup);
 	}
@@ -326,7 +300,6 @@ void releaseLineup(Lineup * lineup) {
 void releaseHomeKit(HomeKit * homeKit) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (homeKit != NULL) {
-		free(homeKit->name);
 		releasePhoto(homeKit->photo);
 		free(homeKit);
 	}
@@ -334,7 +307,6 @@ void releaseHomeKit(HomeKit * homeKit) {
 void releaseBall(Ball * ball) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (ball != NULL) {
-		free(ball->name);
 		releasePhoto(ball->photo);
 		free(ball);
 	}
@@ -342,7 +314,6 @@ void releaseBall(Ball * ball) {
 void releaseSpecial(Special * special) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (special != NULL) {
-		free(special->name);
 		releasePhoto(special->photo);
 		free(special);
 	}
@@ -350,7 +321,6 @@ void releaseSpecial(Special * special) {
 void releasePhoto(Photo * photo) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (photo != NULL) {
-		free(photo->url);
 		free(photo);
 	}
 }
