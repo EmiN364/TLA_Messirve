@@ -1,0 +1,47 @@
+// Creación de equipos con grupos para un torneo
+team Brasil {
+    badge { // Creación de figurita del escudo de Brasil
+        Photo: http://foto.google.com/cbf.png;
+    },
+    player Neymar { // Creación de figurita de Neymar
+        Birthdate: 5/2/1992;
+        Height: 1.75;
+        Weight: 68;
+        Team: Santos FC;
+        Photo: http://foto.google.com/neymar.png;
+    },
+    player Thiago Silva { // Creación de figurita de Thiago Silva
+        Birthdate: 22/9/1984;
+        Height: 1.83;
+        Weight: 79;
+        Team: AC Milan;
+        Photo: http://foto.google.com/thiagosilva.png;
+    }
+},
+tournament Copa America {
+    trophy {
+        Photo: http://foto.google.com/trofeo_copa.png;
+    },
+    group A {
+        team Argentina {
+            badge { // Creación de figurita del escudo de Argentina
+                Photo: http://foto.google.com/afa.png;
+            },
+            player Angel Di Maria { // Creación de figurita de Di Maria
+                Birthdate: 14/2/1988;
+                Height: 1.78;
+                Weight: 75;
+                Team: Sport Lisboa e Benfica;
+                Photo: http://foto.google.com/dimaria.png;
+            },
+            player Nicolas Otamendi { // Creación de figurita de Otamendi
+                Birthdate: 12/2/1988;
+                Height: 1.83;
+                Weight: 82;
+                Team: Sport Lisboa e Benfica;
+                Photo: http://foto.google.com/dimaria.png;
+            }
+        },
+        team Brasil; // Already defined elsewhere
+    }
+}
