@@ -47,6 +47,7 @@ const int main(const int count, const char ** arguments) {
 			compilationStatus = FAILED;
 		}
 		logDebugging(logger, "Releasing AST resources..."); */
+		generate(&compilerState);
 		releaseProgram(program);
 	}
 	else {

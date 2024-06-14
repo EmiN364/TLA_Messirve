@@ -20,10 +20,10 @@ void shutdownGeneratorModule() {
 
 /** PRIVATE FUNCTIONS */
 
-static const char _expressionTypeToCharacter(const ExpressionType type);
-static void _generateConstant(const unsigned int indentationLevel, Constant * constant);
-static void _generateExpression(const unsigned int indentationLevel, Expression * expression);
-static void _generateFactor(const unsigned int indentationLevel, Factor * factor);
+// static const char _expressionTypeToCharacter(const ExpressionType type);
+// static void _generateConstant(const unsigned int indentationLevel, Constant * constant);
+// static void _generateExpression(const unsigned int indentationLevel, Expression * expression);
+// static void _generateFactor(const unsigned int indentationLevel, Factor * factor);
 
 static void _generateEpilogue(const int value);
 static void _generateProgram(Program * program);
@@ -31,7 +31,7 @@ static void _generatePrologue(void);
 static void _generateElements(const unsigned int indentationLevel, Elements * elements);
 static void _generateElement(const unsigned int indentationLevel, Element * element);
 static char * _indentation(const unsigned int indentationLevel);
-static void _output(const unsigned int indentationLevel, const char * const format, ...);
+// static void _output(const unsigned int indentationLevel, const char * const format, ...);
 
 /**
  * Converts and expression type to the proper character of the operation
@@ -136,6 +136,7 @@ static void _generatePrologue(void) {
 	fprintf(f, "<!DOCTYPE html>\n");
 	fprintf(f, "<html>\n");
 	fprintf(f, "<head>\n");
+	fprintf(f, "<title>Figuritas</title>\n");
 	fprintf(f, "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n");
 	fprintf(f, "<link href=\"https://getbootstrap.com/docs/5.2/assets/css/docs.css\" rel=\"stylesheet\">\n");
 	fprintf(f, "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\"></script>\n");
@@ -165,7 +166,7 @@ static void _generateEpilogue(const int value) {
 /**
  * Generates the output of an expression.
  */
-static void _generateExpression(const unsigned int indentationLevel, Expression * expression) {
+/* static void _generateExpression(const unsigned int indentationLevel, Expression * expression) {
 	_output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
 	switch (expression->type) {
 		case ADDITION:
@@ -185,7 +186,7 @@ static void _generateExpression(const unsigned int indentationLevel, Expression 
 	}
 	_output(indentationLevel, "%s", "]\n");
 }
-
+ */
 /**
  * Generates the output of the elements.
  */
@@ -211,16 +212,37 @@ static void _generateElements(const unsigned int indentationLevel, Elements * el
  * Generates the output of an element.
  */
 static void _generateElement(const unsigned int indentationLevel, Element * element) {
-	_output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
+	// _output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
 	switch (element->type) {
-		case EXPRESSION:
-			_generateExpression(1 + indentationLevel, element->expression);
+		case TROPHY_ELEMENT_TYPE: // Prev. EXPRESSION
+			// _generateTrophy(1 + indentationLevel, element->trophy);
+			break;
+		case TEAM_ELEMENT_TYPE:
+			// _generateTeam(1 + indentationLevel, element->team);
+			break;
+		case STADIUM_ELEMENT_TYPE:
+			// _generateStadium(1 + indentationLevel, element->stadium);
+			break;
+		case BADGE_ELEMENT_TYPE:
+			// _generateBadge(1 + indentationLevel, element->badge);
+			break;
+		case PLAYER_ELEMENT_TYPE:
+			// _generatePlayer(1 + indentationLevel, element->player);
+			break;
+		case BALL_ELEMENT_TYPE:
+			// _generateBall(1 + indentationLevel, element->ball);
+			break;
+		case SPECIAL_ELEMENT_TYPE:
+			// _generateSpecial(1 + indentationLevel, element->special);
+			break;
+		case TOURNAMENT_ELEMENT_TYPE:
+			// _generateTournament(1 + indentationLevel, element->tournament);
 			break;
 		default:
 			logError(_logger, "The specified element type is unknown: %d", element->type);
 			break;
 	}
-	_output(indentationLevel, "%s", "]\n");
+	// _output(indentationLevel, "%s", "]\n");
 }
 
 /**
