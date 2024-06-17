@@ -1,9 +1,9 @@
 #include "Generator.h"
+#include <string.h>
 
 FILE * f;
 
 /* MODULE INTERNAL STATE */
-
 const char _indentationCharacter = ' ';
 const char _indentationSize = 4;
 static Logger * _logger = NULL;
@@ -19,79 +19,20 @@ void shutdownGeneratorModule() {
 }
 
 /** PRIVATE FUNCTIONS */
-
-// static const char _expressionTypeToCharacter(const ExpressionType type);
-// static void _generateConstant(const unsigned int indentationLevel, Constant * constant);
-// static void _generateExpression(const unsigned int indentationLevel, Expression * expression);
-// static void _generateFactor(const unsigned int indentationLevel, Factor * factor);
-
-static void _generateEpilogue(const int value);
+static void _generatePrologue();
 static void _generateProgram(Program * program);
-static void _generatePrologue(void);
+static void _generateEpilogue();
 static void _generateElements(const unsigned int indentationLevel, Elements * elements);
 static void _generateElement(const unsigned int indentationLevel, Element * element);
+static void _generateTrophy(const unsigned int indentationLevel, Trophy * trophy);
+static void _generateTeam(const unsigned int indentationLevel, Team * team);
+static void _generateStadium(const unsigned int indentationLevel, Stadium * stadium);
+static void _generateBadge(const unsigned int indentationLevel, Badge * badge);
+static void _generatePlayer(const unsigned int indentationLevel, Player * player);
+static void _generateBall(const unsigned int indentationLevel, Ball * ball);
+static void _generateSpecial(const unsigned int indentationLevel, Special * special);
+static void _generateTournament(const unsigned int indentationLevel, Tournament * tournament);
 static char * _indentation(const unsigned int indentationLevel);
-// static void _output(const unsigned int indentationLevel, const char * const format, ...);
-
-/**
- * Converts and expression type to the proper character of the operation
- * involved, or returns '\0' if that's not possible.
- */
-/* static const char _expressionTypeToCharacter(const ExpressionType type) {
-	switch (type) {
-		case ADDITION: return '+';
-		case DIVISION: return '/';
-		case MULTIPLICATION: return '*';
-		case SUBTRACTION: return '-';
-		default:
-			logError(_logger, "The specified expression type cannot be converted into character: %d", type);
-			return '\0';
-	}
-} */
-
-/**
- * Generates the output of a constant.
- */
-/* static void _generateConstant(const unsigned int indentationLevel, Constant * constant) {
-	_output(indentationLevel, "%s", "[ $C$, circle, draw, black!20\n");
-	_output(1 + indentationLevel, "%s%d%s", "[ $", constant->value, "$, circle, draw ]\n");
-	_output(indentationLevel, "%s", "]\n");
-} */
-
-/**
- * Generates the output of a factor.
- */
-/* static void _generateFactor(const unsigned int indentationLevel, Factor * factor) {
-	_output(indentationLevel, "%s", "[ $F$, circle, draw, black!20\n");
-	switch (factor->type) {
-		case CONSTANT:
-			_generateConstant(1 + indentationLevel, factor->constant);
-			break;
-		case EXPRESSION:
-			_output(1 + indentationLevel, "%s", "[ $($, circle, draw, purple ]\n");
-			_generateExpression(1 + indentationLevel, factor->expression);
-			_output(1 + indentationLevel, "%s", "[ $)$, circle, draw, purple ]\n");
-			break;
-		default:
-			logError(_logger, "The specified factor type is unknown: %d", factor->type);
-			break;
-	}
-	_output(indentationLevel, "%s", "]\n");
-} */
-
-/**
- * Outputs a formatted string to standard output.
- */
-/*static void _output(const unsigned int indentationLevel, const char * const format, ...) {
-	va_list arguments;
-	va_start(arguments, format);
-	char * indentation = _indentation(indentationLevel);
-	char * effectiveFormat = concatenate(2, indentation, format);
-	vfprintf(stdout, effectiveFormat, arguments);
-	free(effectiveFormat);
-	free(indentation);
-	va_end(arguments);
-}*/
 
 /**
  * Generates an indentation string for the specified level.
@@ -105,11 +46,10 @@ static char * _indentation(const unsigned int level) {
  */
 void generate(CompilerState * compilerState) {
 	logDebugging(_logger, "Generating final output...");
-	// genero el archivo html en donde voy a imprimir las figuritas
 	f = fopen("Output.html", "w");
 	_generatePrologue();
 	_generateProgram(compilerState->abstractSyntaxtTree);
-	_generateEpilogue(compilerState->value);
+	_generateEpilogue();
 	fclose(f);
 	logDebugging(_logger, "Generation is done.");
 }
@@ -120,28 +60,16 @@ void generate(CompilerState * compilerState) {
  *
  * @see https://ctan.dcc.uchile.cl/graphics/pgf/contrib/forest/forest-doc.pdf
  */
-static void _generatePrologue(void) {
-	/*
-	_output(0, "%s",
-		"\\<!DOCTYPE html>\n"
-		"\\<html>\n"
-		"\\<head>\n"
-		"\\<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n"
-		"\\<link href=\"https://getbootstrap.com/docs/5.2/assets/css/docs.css\" rel=\"stylesheet\">\n"
-		"\\<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\"></script>\n"
-		"\\</head>\n"
-		"\\<body>\n"
-	);
-	*/
+static void _generatePrologue() {
 	fprintf(f, "<!DOCTYPE html>\n");
 	fprintf(f, "<html>\n");
-	fprintf(f, "<head>\n");
-	fprintf(f, "<title>Figuritas</title>\n");
-	fprintf(f, "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n");
-	fprintf(f, "<link href=\"https://getbootstrap.com/docs/5.2/assets/css/docs.css\" rel=\"stylesheet\">\n");
-	fprintf(f, "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\"></script>\n");
-	fprintf(f, "</head>\n");
-	fprintf(f, "<body>\n");
+	fprintf(f, "%s<head>\n", _indentation(1));
+	fprintf(f, "%s<title>Figuritas</title>\n", _indentation(2));
+	fprintf(f, "%s<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n", _indentation(3));
+	fprintf(f, "%s<link href=\"https://getbootstrap.com/docs/5.2/assets/css/docs.css\" rel=\"stylesheet\">\n", _indentation(3));
+	fprintf(f, "%s<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\"></script>\n", _indentation(3));
+	fprintf(f, "%s</head>\n", _indentation(2));
+	fprintf(f, "%s<body>\n", _indentation(2));
 }
 
 /**
@@ -154,45 +82,16 @@ static void _generateProgram(Program * program) {
 /**
  * Creates the epilogue of the generated output.
  */
-static void _generateEpilogue(const int value) {
-	/*_output(0, "%s",
-		"\\</body>\n"
-		"\\</html>\n"
-	);*/
-	fprintf(f, "</body>\n");
+static void _generateEpilogue() {
+	fprintf(f, "%s</body>\n", _indentation(1));
 	fprintf(f, "</html>\n");
 }
 
 /**
- * Generates the output of an expression.
- */
-/* static void _generateExpression(const unsigned int indentationLevel, Expression * expression) {
-	_output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
-	switch (expression->type) {
-		case ADDITION:
-		case DIVISION:
-		case MULTIPLICATION:
-		case SUBTRACTION:
-			_generateExpression(1 + indentationLevel, expression->leftExpression);
-			_output(1 + indentationLevel, "%s%c%s", "[ $", _expressionTypeToCharacter(expression->type), "$, circle, draw, purple ]\n");
-			_generateExpression(1 + indentationLevel, expression->rightExpression);
-			break;
-		case FACTOR:
-			_generateFactor(1 + indentationLevel, expression->factor);
-			break;
-		default:
-			logError(_logger, "The specified expression type is unknown: %d", expression->type);
-			break;
-	}
-	_output(indentationLevel, "%s", "]\n");
-}
- */
-/**
  * Generates the output of the elements.
  */
 static void _generateElements(const unsigned int indentationLevel, Elements * elements) {
-	//_output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
-	fprintf(f, "<div class=\"card\" style=\"width: 18rem;\">\n");
+	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", indentation(' ', indentationLevel, 4));
 	switch (elements->type) {
 		case SINGLE:
 			_generateElement(1 + indentationLevel, elements->element);
@@ -205,44 +104,55 @@ static void _generateElements(const unsigned int indentationLevel, Elements * el
 			logError(_logger, "The specified elements type is unknown: %d", elements->type);
 			break;
 	}
-	//_output(indentationLevel, "%s", "]\n");
+	fprintf(f, "%s</div>\n", indentation(' ', indentationLevel, 4));
 }
 
 /**
  * Generates the output of an element.
  */
 static void _generateElement(const unsigned int indentationLevel, Element * element) {
-	// _output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
 	switch (element->type) {
-		case TROPHY_ELEMENT_TYPE: // Prev. EXPRESSION
-			// _generateTrophy(1 + indentationLevel, element->trophy);
+		case TROPHY_ELEMENT_TYPE:
+			_generateTrophy(1 + indentationLevel, element->trophy);
 			break;
 		case TEAM_ELEMENT_TYPE:
-			// _generateTeam(1 + indentationLevel, element->team);
+			//_generateTeam(1 + indentationLevel, element->team);
 			break;
 		case STADIUM_ELEMENT_TYPE:
-			// _generateStadium(1 + indentationLevel, element->stadium);
+			//_generateStadium(1 + indentationLevel, element->stadium);
 			break;
 		case BADGE_ELEMENT_TYPE:
-			// _generateBadge(1 + indentationLevel, element->badge);
+			//_generateBadge(1 + indentationLevel, element->badge);
 			break;
 		case PLAYER_ELEMENT_TYPE:
-			// _generatePlayer(1 + indentationLevel, element->player);
+			//_generatePlayer(1 + indentationLevel, element->player);
 			break;
 		case BALL_ELEMENT_TYPE:
-			// _generateBall(1 + indentationLevel, element->ball);
+			//_generateBall(1 + indentationLevel, element->ball);
 			break;
 		case SPECIAL_ELEMENT_TYPE:
-			// _generateSpecial(1 + indentationLevel, element->special);
+			//_generateSpecial(1 + indentationLevel, element->special);
 			break;
 		case TOURNAMENT_ELEMENT_TYPE:
-			// _generateTournament(1 + indentationLevel, element->tournament);
+			//_generateTournament(1 + indentationLevel, element->tournament);
 			break;
 		default:
 			logError(_logger, "The specified element type is unknown: %d", element->type);
 			break;
 	}
-	// _output(indentationLevel, "%s", "]\n");
+}
+
+static void _generateTrophy(const unsigned int indentationLevel, Trophy * trophy){
+	//fprintf(f, "%s<img src=\"%s\" class=\"card-img-top\">\n", indentation(' ', indentationLevel, 4), trophy->photo->url);
+	fprintf(f, "%s<div class=\"card-body\">\n", indentation(' ', indentationLevel, 4));
+	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", indentation(' ', indentationLevel+1, 4), trophy->name);
+	fprintf(f, "%s</div>\n", indentation(' ', indentationLevel, 4));
+}
+
+static void _generateTeam(const unsigned int indentationLevel, Team * team){
+	//fprintf(f, "%s<img src=\"%s\" style=\"margin-left:%dpx\" class=\"card-img-top\">\n", indentation(' ', indentationLevel, 4), trophy->photo->url, indentationLevel*20);
+	//fprintf(f, "%s<div class=\"card-body\">\n", indentation(' ', indentationLevel, 4));
+	//fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", indentation(' ', indentationLevel, 4), trophy->name);
 }
 
 /**
@@ -257,11 +167,147 @@ static void _generateElement(const unsigned int indentationLevel, Element * elem
 
 </head>
 <body>
-    <div class="card" style="width: 18rem;">
-        <img src="https://s.rfi.fr/media/display/797a3f40-12b1-11ea-ad06-005056a99247/w:1280/p:1x1/ballon-adidas-jabulani-2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Jabulani</h5>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://i.pinimg.com/736x/b5/e1/d4/b5e1d4ad4df90b85586a351d7bd39159.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Argentina</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://www.lavoz.com.ar/resizer/U3Ia_Y1YqUPbDwmtG-XQawJ5Yu4=/0x0:0x0/980x640/filters:quality(80):format(webp)/cloudfront-us-east-1.images.arcpublishing.com/grupoclarin/IZEFTQH7LFAZRCUHJCREERY5C4.jpg" class="card-img-top" alt="...">
+            </div>
+        </div>
+        <div class="col">
+           <h1>Argentina</h1>
         </div>
     </div>
+    <div class="container text-center">
+        <div class="row row-cols-4">
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>  
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://fmdataba.com/images/p/1165.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Lionel Messi</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Pais: Argentina</li>
+                  <li class="list-group-item">Nacimiento: 24/06/1987</li>
+                  <li class="list-group-item">Equipo: Inter Miami CF</li>
+                  <li class="list-group-item">Altura: 1.69</li>
+                  <li class="list-group-item">Peso: 67kg</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 </body>
 */
