@@ -129,6 +129,7 @@ Token CommaLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 
 Token URLLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
 	return URL;
 }
 

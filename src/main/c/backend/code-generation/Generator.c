@@ -218,7 +218,7 @@ static void _generateStadiumData(const unsigned int indentationLevel, StadiumDat
 
 static void _generatePlayer(const unsigned int indentationLevel, Player * player){
 	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	_print_URL(indentationLevel, player->playerDatas->playerData->photo->url);
+	// _print_URL(indentationLevel, player->playerDatas->playerData->photo->url); //TODO: Fix. Pensar que es un arbol.
 	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
 	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), player->name);
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
@@ -429,7 +429,9 @@ static void _print_URL(const unsigned int indentationLevel, char * url){
 	/*
 	si url es null imprimir una default
 	*/
-	//fprintf(f, "%s<img src=\"%s\" class=\"card-img-top\">\n", _indentation(indentationLevel), url);
+	logInformation(_logger, "Printing URL\n");
+	fprintf(f, "%s<img src=\"%s\" class=\"card-img-top\">\n", _indentation(indentationLevel), url ? url : "http://image.com/default");
+	logInformation(_logger, "Ended Printing URL\n");
 	return;
 }
 
