@@ -1,7 +1,24 @@
 #include "Generator.h"
 #include <string.h>
 
+// Archivo de salida
 FILE * f;
+
+struct teamMap {
+	struct teamMap * next;
+	char * key;
+	Team * team;
+};
+struct playerMap {
+	struct playerMap * next;
+	char * key;
+	Player * player;
+	boolean printed;
+};
+
+struct teamMap * teamMapHead;
+struct playerMap * playerMapHead;
+//playerMap * noTeamPlayerMapHead;
 
 /* MODULE INTERNAL STATE */
 const char _indentationCharacter = ' ';
@@ -26,10 +43,12 @@ static void _generateElements(const unsigned int indentationLevel, Elements * el
 static void _generateElement(const unsigned int indentationLevel, Element * element);
 static void _generateTrophy(const unsigned int indentationLevel, Trophy * trophy);
 static void _generateTeam(const unsigned int indentationLevel, Team * team);
+static void _addTeam(Team * team);
 static void _generateTeams(const unsigned int indentationLevel, Teams * teams);
 static void _generateStadium(const unsigned int indentationLevel, Stadium * stadium);
 static void _generateBadge(const unsigned int indentationLevel, Badge * badge);
 static void _generatePlayer(const unsigned int indentationLevel, Player * player);
+static void _addPlayer(Player * player);
 static void _generateBall(const unsigned int indentationLevel, Ball * ball);
 static void _generateSpecial(const unsigned int indentationLevel, Special * special);
 static void _generateTournament(const unsigned int indentationLevel, Tournament * tournament);
@@ -216,9 +235,35 @@ static void _generateStadiumData(const unsigned int indentationLevel, StadiumDat
 	}
 }
 
+char * _getPhotoFromPlayer(Player * player) {
+	if (player->playerDatas->type == SINGLE) {
+		if (player->playerDatas->playerData->type == PLAYER_TYPE_PHOTO) {
+			return player->playerDatas->playerData->photo->url;
+		}
+	}
+	PlayerDatas * playerDatas = player->playerDatas;
+	while (playerDatas->leftPlayerData-> type != PLAYER_TYPE_PHOTO) {
+		playerDatas = playerDatas->playerDatas;
+	}
+	return playerDatas->leftPlayerData->type == PLAYER_TYPE_PHOTO ? playerDatas->leftPlayerData->photo->url : "http://image.com/default";
+}
+
+static void _addPlayer(Player * player){
+	for (struct playerMap * current = playerMapHead; current != NULL; current = current->next) {
+		if (strcmp(current->key, player->name) == 0) {
+			return;
+		}
+	}
+	struct playerMap * newPlayerMap = (struct playerMap*) malloc(sizeof(struct playerMap));
+	newPlayerMap->key = player->name;
+	newPlayerMap->player = player;
+	newPlayerMap->next = playerMapHead;
+	playerMapHead = newPlayerMap;
+}
+
 static void _generatePlayer(const unsigned int indentationLevel, Player * player){
 	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	// _print_URL(indentationLevel, player->playerDatas->playerData->photo->url); //TODO: Fix. Pensar que es un arbol.
+	_print_URL(indentationLevel, _getPhotoFromPlayer(player)); //TODO: Fix. Pensar que es un arbol.
 	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
 	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), player->name);
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
@@ -254,7 +299,7 @@ static void _generatePlayerData (const unsigned int indentationLevel, PlayerData
 			_generatePlayerTypeFloat(indentationLevel, playerData->playerTypeFloat, playerData->floatValue);
 			break;
 		case PLAYER_TYPE_PHOTO:
-			_print_URL(indentationLevel, playerData->photo->url);
+			// _print_URL(indentationLevel, playerData->photo->url); // Already done in generatePlayer
 			break;
 		default:
 			logError(_logger, "The specified element type is unknown: %d", playerData->type);
@@ -293,13 +338,67 @@ static void _generatePlayerTypeFloat(const unsigned int indentationLevel, Player
 	}
 }
 
+static void _addTeam(Team * team){
+	// agrego el equipo al mapa, me tengo que fijar si ya existe
+
+	for (struct teamMap * current = teamMapHead; current != NULL; current = current->next) {
+		if (strcmp(current->key, team->name) == 0) {
+			return;
+		}
+	}
+
+	struct teamMap * newTeamMap = (struct teamMap*) malloc(sizeof(struct teamMap));
+	newTeamMap->key = team->name;
+	newTeamMap->team = team;
+	newTeamMap->next = teamMapHead;
+	teamMapHead = newTeamMap;
+}
+
 static void _generateTeam(const unsigned int indentationLevel, Team * team){
+	/* teamMapHead = NULL;
+	playerMapHead = NULL; */
+	
 	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
 	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
 	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), team->name);
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
 
-	_generateTTeams(indentationLevel+1, team->tTeams);
+	if (team->tTeams != NULL) {
+		_addTeam(team);
+		_generateTTeams(indentationLevel+1, team->tTeams);
+	} else {
+		logInformation(_logger, "The team %s has no tTeams. Searching in map", team->name);
+
+		// Lo busco en la lista
+		struct teamMap * current = teamMapHead;
+		while (current != NULL) {
+			if (strcmp(current->key, team->name) == 0) {
+				logInformation(_logger, "The team %s was found in the team map", team->name);
+				_generateTTeams(indentationLevel+1, current->team->tTeams);
+				break;
+			}
+			current = current->next;
+		}
+		if (current == NULL) {
+			logError(_logger, "The team %s was not found in the team map", team->name);
+		}
+	}
+
+	/* // imprimo los equipos y jugadores
+	for (struct teamMap * current = teamMapHead; current != NULL; current = current->next) {
+		_generateTeam(indentationLevel+1, current->team);
+	}
+	fprintf(f, "%s<div class=\"container text-center\">\n", _indentation(indentationLevel+1));
+	fprintf(f, "%s<div class=\"row row-cols-4\">\n", _indentation(indentationLevel + 2));
+
+	for (struct playerMap * current = playerMapHead; current != NULL; current = current->next) {
+		fprintf(f, "%s<div class=\"col\">\n", _indentation(indentationLevel + 3));
+		_generatePlayer(indentationLevel + 4, current->player);
+		fprintf(f, "%s</div>\n", _indentation(indentationLevel + 3));
+	}
+
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 2));
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1)); */
 
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
@@ -331,6 +430,7 @@ static void _generateTTeam(const unsigned int indentationLevel, TTeam * tTeam){
 			_generateHomeKit(indentationLevel, tTeam->homeKit);
 			break;
 		case PLAYER_TTEAM_TYPE:
+			_addPlayer(tTeam->player);
 			_generatePlayer(indentationLevel, tTeam->player);
 			break;
 		default:
@@ -429,9 +529,9 @@ static void _print_URL(const unsigned int indentationLevel, char * url){
 	/*
 	si url es null imprimir una default
 	*/
-	logInformation(_logger, "Printing URL\n");
+	logDebugging(_logger, "Printing URL");
 	fprintf(f, "%s<img src=\"%s\" class=\"card-img-top\">\n", _indentation(indentationLevel), url ? url : "http://image.com/default");
-	logInformation(_logger, "Ended Printing URL\n");
+	logDebugging(_logger, "Ended Printing URL");
 	return;
 }
 
