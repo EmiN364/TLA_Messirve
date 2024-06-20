@@ -53,7 +53,7 @@ static void _generateBall(const unsigned int indentationLevel, Ball * ball);
 static void _generateSpecial(const unsigned int indentationLevel, Special * special);
 static void _generateTournament(const unsigned int indentationLevel, Tournament * tournament);
 static char * _indentation(const unsigned int indentationLevel);
-static void _print_URL(const unsigned int indentationLevel, char * url);
+static void _printURL(const unsigned int indentationLevel, char * url);
 static void _generateCard(const unsigned int indentationLevel, char * url, char * name);
 static void _generatePlayerDatas(const unsigned int indentationLevel, PlayerDatas * playerDatas);
 static void _generatePlayerData(const unsigned int indentationLevel, PlayerData * playerData);
@@ -67,6 +67,8 @@ static void _generateLineup(const unsigned int indentationLevel, Lineup * lineup
 static void _generateHomeKit(const unsigned int indentationLevel, HomeKit * homeKit);
 static void _generateTElements(const unsigned int indentationLevel, TElements * tElements);
 static void _generateTElement(const unsigned int indentationLevel, TElement * tElement);
+static void _generateTElementExtra(const unsigned int indentationLevel, TElement * tElement);
+static void _generateTElementsExtras(const unsigned int indentationLevel, TElements * tElements);
 static void _generateGroup(const unsigned int indentationLevel, Group * group);
 
 /**
@@ -176,36 +178,60 @@ static void _generateElement(const unsigned int indentationLevel, Element * elem
 }
 
 
-static void _generateTrophy(const unsigned int indentationLevel, Trophy * trophy){
+static void _generateTrophy(const unsigned int indentationLevel, Trophy * trophy) {
 	_generateCard(indentationLevel, trophy->photo->url, trophy->name);
 }
 
-static void _generateBadge(const unsigned int indentationLevel, Badge * badge){
-	_generateCard(indentationLevel, badge->photo->url, badge->name);
+static void _generateBadge(const unsigned int indentationLevel, Badge * badge) {
+	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
+	_printURL(indentationLevel + 1, badge->photo->url);
+	char * name = badge->name;
+	if (name != NULL) {
+		fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));	
+		fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), name);
+		fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
+	}
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
 
-static void _generateBall(const unsigned int indentationLevel, Ball * ball){
+static void _generateBall(const unsigned int indentationLevel, Ball * ball) {
 	_generateCard(indentationLevel, ball->photo->url, ball->name);
 }
 
-static void _generateSpecial(const unsigned int indentationLevel, Special * special){
+static void _generateSpecial(const unsigned int indentationLevel, Special * special) {
 	_generateCard(indentationLevel, special->photo->url, special->name);
 }
 
-static void _generateStadium(const unsigned int indentationLevel, Stadium * stadium){
-	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
-	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), stadium->name);
-	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
+char * _getPhotoFromStadium(Stadium * stadium) {
+	if (stadium->stadiumDatas->type == SINGLE) {
+		if (stadium->stadiumDatas->stadiumData->type == STADIUM_PHOTO) {
+			return stadium->stadiumDatas->stadiumData->photo->url;
+		}
+	}
+	StadiumDatas * stadiumDatas = stadium->stadiumDatas;
+	while (stadiumDatas->leftStadiumData-> type != STADIUM_PHOTO) {
+		stadiumDatas = stadiumDatas->stadiumDatas;
+	}
+	return stadiumDatas->leftStadiumData->type == STADIUM_PHOTO ? stadiumDatas->leftStadiumData->photo->url : "https://placehold.co/400?text=No%20player%20image";
+}
 
-	_generateStadiumDatas(indentationLevel+1, stadium->stadiumDatas);
+static void _generateStadium(const unsigned int indentationLevel, Stadium * stadium) {
+	fprintf(f, "%s<div class=\"card mb-4\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
+
+	_printURL(indentationLevel + 1, _getPhotoFromStadium(stadium));
+
+	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), stadium->name);
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
+
+	_generateStadiumDatas(indentationLevel + 1, stadium->stadiumDatas);
 
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
 
-static void _generateStadiumDatas(const unsigned int indentationLevel, StadiumDatas * stadiumDatas){
+static void _generateStadiumDatas(const unsigned int indentationLevel, StadiumDatas * stadiumDatas) {
 
-	switch(stadiumDatas->type){
+	switch(stadiumDatas->type) {
 		case SINGLE:
 			_generateStadiumData(indentationLevel, stadiumDatas->stadiumData);
 			break;
@@ -219,15 +245,15 @@ static void _generateStadiumDatas(const unsigned int indentationLevel, StadiumDa
 	}
 }
 
-static void _generateStadiumData(const unsigned int indentationLevel, StadiumData * stadiumData){
-	switch(stadiumData->type){
+static void _generateStadiumData(const unsigned int indentationLevel, StadiumData * stadiumData) {
+	switch(stadiumData->type) {
 		case STADIUM_CAPACITY:
 			fprintf(f, "%s<ul class=\"list-group list-group-flush\">\n", _indentation(indentationLevel));
-			fprintf(f, "%s<li class=\"list-group-item\">Capacidad: %d</li>\n", _indentation(indentationLevel+1), stadiumData->capacity);
+			fprintf(f, "%s<li class=\"list-group-item\">Capacidad: %d</li>\n", _indentation(indentationLevel + 1), stadiumData->capacity);
 			fprintf(f, "%s</ul>\n", _indentation(indentationLevel));
 			break;
 		case STADIUM_PHOTO:
-			_print_URL(indentationLevel, stadiumData->photo->url);
+			// _printURL(indentationLevel, stadiumData->photo->url); // Done in generateStadium
 			break;
 		default:
 			logError(_logger, "The specified elements type is unknown: %d", stadiumData->type);
@@ -245,10 +271,10 @@ char * _getPhotoFromPlayer(Player * player) {
 	while (playerDatas->leftPlayerData-> type != PLAYER_TYPE_PHOTO) {
 		playerDatas = playerDatas->playerDatas;
 	}
-	return playerDatas->leftPlayerData->type == PLAYER_TYPE_PHOTO ? playerDatas->leftPlayerData->photo->url : "http://image.com/default";
+	return playerDatas->leftPlayerData->type == PLAYER_TYPE_PHOTO ? playerDatas->leftPlayerData->photo->url : "https://placehold.co/400?text=No%20player%20image";
 }
 
-static void _addPlayer(Player * player){
+static void _addPlayer(Player * player) {
 	for (struct playerMap * current = playerMapHead; current != NULL; current = current->next) {
 		if (strcmp(current->key, player->name) == 0) {
 			return;
@@ -261,21 +287,21 @@ static void _addPlayer(Player * player){
 	playerMapHead = newPlayerMap;
 }
 
-static void _generatePlayer(const unsigned int indentationLevel, Player * player){
+static void _generatePlayer(const unsigned int indentationLevel, Player * player) {
 	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	_print_URL(indentationLevel, _getPhotoFromPlayer(player)); //TODO: Fix. Pensar que es un arbol.
-	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
-	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), player->name);
-	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
-	fprintf(f, "%s<ul class=\"list-group list-group-flush\">\n", _indentation(indentationLevel+1));
+	_printURL(indentationLevel, _getPhotoFromPlayer(player)); //TODO: Fix. Pensar que es un arbol.
+	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), player->name);
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<ul class=\"list-group list-group-flush\">\n", _indentation(indentationLevel + 1));
 
-	_generatePlayerDatas(indentationLevel+2, player->playerDatas);
+	_generatePlayerDatas(indentationLevel + 2, player->playerDatas);
 
-	fprintf(f, "%s</ul>\n", _indentation(indentationLevel+1));
+	fprintf(f, "%s</ul>\n", _indentation(indentationLevel + 1));
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
 
-static void _generatePlayerDatas(const unsigned int indentationLevel, PlayerDatas * playerDatas){
+static void _generatePlayerDatas(const unsigned int indentationLevel, PlayerDatas * playerDatas) {
 switch (playerDatas->type) {
 		case SINGLE:
 			_generatePlayerData(indentationLevel, playerDatas->playerData);
@@ -290,7 +316,7 @@ switch (playerDatas->type) {
 	}
 }
 
-static void _generatePlayerData (const unsigned int indentationLevel, PlayerData * playerData){
+static void _generatePlayerData (const unsigned int indentationLevel, PlayerData * playerData) {
 	switch (playerData->type) {
 		case PLAYER_TYPE_STRING:
 			_generatePlayerTypeString(indentationLevel, playerData->playerTypeString, playerData->value);
@@ -299,7 +325,7 @@ static void _generatePlayerData (const unsigned int indentationLevel, PlayerData
 			_generatePlayerTypeFloat(indentationLevel, playerData->playerTypeFloat, playerData->floatValue);
 			break;
 		case PLAYER_TYPE_PHOTO:
-			// _print_URL(indentationLevel, playerData->photo->url); // Already done in generatePlayer
+			// _printURL(indentationLevel, playerData->photo->url); // Already done in generatePlayer
 			break;
 		default:
 			logError(_logger, "The specified element type is unknown: %d", playerData->type);
@@ -307,7 +333,7 @@ static void _generatePlayerData (const unsigned int indentationLevel, PlayerData
 	}
 }
 
-static void _generatePlayerTypeString(const unsigned int indentationLevel, PlayerTypeString * playerTypeString, char * value){
+static void _generatePlayerTypeString(const unsigned int indentationLevel, PlayerTypeString * playerTypeString, char * value) {
 	switch (playerTypeString->type) {
 		case PLAYER_COUNTRY:
 			fprintf(f, "%s<li class=\"list-group-item\">Pais: %s</li>\n", _indentation(indentationLevel), value);
@@ -324,7 +350,7 @@ static void _generatePlayerTypeString(const unsigned int indentationLevel, Playe
 	}
 }
 
-static void _generatePlayerTypeFloat(const unsigned int indentationLevel, PlayerTypeFloat * playerTypeFloat, float floatValue){
+static void _generatePlayerTypeFloat(const unsigned int indentationLevel, PlayerTypeFloat * playerTypeFloat, float floatValue) {
 	switch (playerTypeFloat->type) {
 		case PLAYER_HEIGHT:
 			fprintf(f, "%s<li class=\"list-group-item\">Altura: %.2f</li>\n", _indentation(indentationLevel), floatValue);
@@ -338,7 +364,7 @@ static void _generatePlayerTypeFloat(const unsigned int indentationLevel, Player
 	}
 }
 
-static void _addTeam(Team * team){
+static void _addTeam(Team * team) {
 	// agrego el equipo al mapa, me tengo que fijar si ya existe
 
 	for (struct teamMap * current = teamMapHead; current != NULL; current = current->next) {
@@ -354,18 +380,25 @@ static void _addTeam(Team * team){
 	teamMapHead = newTeamMap;
 }
 
-static void _generateTeam(const unsigned int indentationLevel, Team * team){
+static void _generateTeam(const unsigned int indentationLevel, Team * team) {
 	/* teamMapHead = NULL;
 	playerMapHead = NULL; */
 	
-	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
-	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), team->name);
-	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
+	fprintf(f, "%s<div class=\"card\">\n", _indentation(indentationLevel));
+	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), team->name);
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 
 	if (team->tTeams != NULL) {
 		_addTeam(team);
-		_generateTTeams(indentationLevel+1, team->tTeams);
+
+		fprintf(f, "%s<div class=\"container text-center\">\n", _indentation(indentationLevel + 1));
+		fprintf(f, "%s<div class=\"row row-cols-4 gap-4 pb-4\">\n", _indentation(indentationLevel + 2));
+
+		_generateTTeams(indentationLevel + 1, team->tTeams);
+
+		fprintf(f, "%s</div>\n", _indentation(indentationLevel + 2));
+		fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 	} else {
 		logInformation(_logger, "The team %s has no tTeams. Searching in map", team->name);
 
@@ -374,7 +407,15 @@ static void _generateTeam(const unsigned int indentationLevel, Team * team){
 		while (current != NULL) {
 			if (strcmp(current->key, team->name) == 0) {
 				logInformation(_logger, "The team %s was found in the team map", team->name);
-				_generateTTeams(indentationLevel+1, current->team->tTeams);
+
+				fprintf(f, "%s<div class=\"container text-center\">\n", _indentation(indentationLevel + 1));
+				fprintf(f, "%s<div class=\"row row-cols-4 gap-4 pb-4\">\n", _indentation(indentationLevel + 2));
+
+				_generateTTeams(indentationLevel + 1, current->team->tTeams);
+
+				fprintf(f, "%s</div>\n", _indentation(indentationLevel + 2));
+				fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
+
 				break;
 			}
 			current = current->next;
@@ -386,9 +427,9 @@ static void _generateTeam(const unsigned int indentationLevel, Team * team){
 
 	/* // imprimo los equipos y jugadores
 	for (struct teamMap * current = teamMapHead; current != NULL; current = current->next) {
-		_generateTeam(indentationLevel+1, current->team);
+		_generateTeam(indentationLevel + 1, current->team);
 	}
-	fprintf(f, "%s<div class=\"container text-center\">\n", _indentation(indentationLevel+1));
+	fprintf(f, "%s<div class=\"container text-center\">\n", _indentation(indentationLevel + 1));
 	fprintf(f, "%s<div class=\"row row-cols-4\">\n", _indentation(indentationLevel + 2));
 
 	for (struct playerMap * current = playerMapHead; current != NULL; current = current->next) {
@@ -403,7 +444,7 @@ static void _generateTeam(const unsigned int indentationLevel, Team * team){
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
 
-static void _generateTTeams(const unsigned int indentationLevel, TTeams * tTeams){
+static void _generateTTeams(const unsigned int indentationLevel, TTeams * tTeams) {
 	switch (tTeams->type) {
 		case SINGLE:
 			_generateTTeam(indentationLevel, tTeams->tTeam);
@@ -418,7 +459,7 @@ static void _generateTTeams(const unsigned int indentationLevel, TTeams * tTeams
 	}
 }
 
-static void _generateTTeam(const unsigned int indentationLevel, TTeam * tTeam){
+static void _generateTTeam(const unsigned int indentationLevel, TTeam * tTeam) {
 	switch (tTeam->type) {
 		case BADGE_TTEAM_TYPE:
 			_generateBadge(indentationLevel, tTeam->badge);
@@ -439,26 +480,72 @@ static void _generateTTeam(const unsigned int indentationLevel, TTeam * tTeam){
 	}
 }
 
-static void _generateLineup(const unsigned int indentationLevel, Lineup * lineup){
+static void _generateLineup(const unsigned int indentationLevel, Lineup * lineup) {
 	_generateCard(indentationLevel, lineup->photo->url, lineup->name);
 }
 
-static void _generateHomeKit(const unsigned int indentationLevel, HomeKit * homeKit){
+static void _generateHomeKit(const unsigned int indentationLevel, HomeKit * homeKit) {
 	_generateCard(indentationLevel, homeKit->photo->url, homeKit->name);
 }
 
-static void _generateTournament(const unsigned int indentationLevel, Tournament * tournament){
-	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
-	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), tournament->name);
-	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
+static void _generateTournament(const unsigned int indentationLevel, Tournament * tournament) {
+	fprintf(f, "%s<div class=\"card\">\n", _indentation(indentationLevel));
+	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), tournament->name);
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 
-	_generateTElements(indentationLevel+1, tournament->tElements);
+	fprintf(f, "%s<div class=\"container text-center\">\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<div class=\"row row-cols-4 gap-4 pb-4\">\n", _indentation(indentationLevel + 2));
+
+	_generateTElementsExtras(indentationLevel + 1, tournament->tElements);
+
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 2));
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
+
+	_generateTElements(indentationLevel + 1, tournament->tElements);
 
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
 
-static void _generateTElements(const unsigned int indentationLevel, TElements * tElements){
+static void _generateTElementsExtras(const unsigned int indentationLevel, TElements * tElements) {
+	switch (tElements->type) {
+		case SINGLE:
+			_generateTElementExtra(indentationLevel, tElements->tElement);
+			break;
+		case MULTIPLE:
+			_generateTElementExtra(indentationLevel, tElements->leftTElement);
+			_generateTElementsExtras(indentationLevel, tElements->tElements);
+			break;
+		default:
+			logError(_logger, "The specified elements type is unknown: %d", tElements->type);
+			break;
+	}
+}
+
+static void _generateTElementExtra(const unsigned int indentationLevel, TElement * tElement) {
+	switch (tElement->type) {
+		case TROPHY_TELEMENT_TYPE:
+			_generateTrophy(indentationLevel, tElement->trophy);
+			break;
+		case TEAM_TELEMENT_TYPE:
+			// _generateTeam(indentationLevel, tElement->team);
+			break;
+		case GROUP_TELEMENT_TYPE:
+			// _generateGroup(indentationLevel, tElement->group);
+			break;
+		case STADIUM_TELEMENT_TYPE:
+			_generateStadium(indentationLevel, tElement->stadium);
+			break;
+		case BALL_TELEMENT_TYPE:
+			_generateBall(indentationLevel, tElement->ball);
+			break;
+		default:
+			logError(_logger, "The specified element type is unknown: %d", tElement->type);
+			break;
+	}
+}
+
+static void _generateTElements(const unsigned int indentationLevel, TElements * tElements) {
 	switch (tElements->type) {
 		case SINGLE:
 			_generateTElement(indentationLevel, tElements->tElement);
@@ -473,10 +560,10 @@ static void _generateTElements(const unsigned int indentationLevel, TElements * 
 	}
 }
 
-static void _generateTElement(const unsigned int indentationLevel, TElement * tElement){
+static void _generateTElement(const unsigned int indentationLevel, TElement * tElement) {
 	switch (tElement->type) {
 		case TROPHY_TELEMENT_TYPE:
-			_generateTrophy(indentationLevel, tElement->trophy);
+			// _generateTrophy(indentationLevel, tElement->trophy);
 			break;
 		case TEAM_TELEMENT_TYPE:
 			_generateTeam(indentationLevel, tElement->team);
@@ -485,10 +572,10 @@ static void _generateTElement(const unsigned int indentationLevel, TElement * tE
 			_generateGroup(indentationLevel, tElement->group);
 			break;
 		case STADIUM_TELEMENT_TYPE:
-			_generateStadium(indentationLevel, tElement->stadium);
+			// _generateStadium(indentationLevel, tElement->stadium);
 			break;
 		case BALL_TELEMENT_TYPE:
-			_generateBall(indentationLevel, tElement->ball);
+			// _generateBall(indentationLevel, tElement->ball);
 			break;
 		default:
 			logError(_logger, "The specified element type is unknown: %d", tElement->type);
@@ -496,19 +583,18 @@ static void _generateTElement(const unsigned int indentationLevel, TElement * tE
 	}
 }
 
+static void _generateGroup(const unsigned int indentationLevel, Group * group) {
+	fprintf(f, "%s<div class=\"card\">\n", _indentation(indentationLevel));
+	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
+	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), group->name);
+	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 
-static void _generateGroup(const unsigned int indentationLevel, Group * group){
-	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));
-	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), group->name);
-	fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
-
-	_generateTeams(indentationLevel+1, group->teams);
+	_generateTeams(indentationLevel + 1, group->teams);
 
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
 
-static void _generateTeams(const unsigned int indentationLevel, Teams * teams){
+static void _generateTeams(const unsigned int indentationLevel, Teams * teams) {
 	switch (teams->type) {
 		case SINGLE:
 			_generateTeam(indentationLevel, teams->team);
@@ -523,26 +609,24 @@ static void _generateTeams(const unsigned int indentationLevel, Teams * teams){
 	}
 }
 
-
-
-static void _print_URL(const unsigned int indentationLevel, char * url){
+static void _printURL(const unsigned int indentationLevel, char * url) {
 	/*
 	si url es null imprimir una default
 	*/
 	logDebugging(_logger, "Printing URL");
-	fprintf(f, "%s<img src=\"%s\" class=\"card-img-top\">\n", _indentation(indentationLevel), url ? url : "http://image.com/default");
+	fprintf(f, "%s<img src=\"%s\" class=\"card-img-top\" style=\"width: 16rem; height: 21rem; margin: 1rem auto 0rem auto;\">\n", _indentation(indentationLevel), url ? url : "https://placehold.co/400?text=No%20image");
 	logDebugging(_logger, "Ended Printing URL");
 	return;
 }
 
 //Ball, Badge, Trophy, Special, Homekit, Lineup
-static void _generateCard(const unsigned int indentationLevel, char * url, char * name){
-	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	_print_URL(indentationLevel, url);
-	if(name != NULL){
-		fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel+1));	
-		fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel+2), name);
-		fprintf(f, "%s</div>\n", _indentation(indentationLevel+1));
+static void _generateCard(const unsigned int indentationLevel, char * url, char * name) {
+	fprintf(f, "%s<div class=\"card mb-4\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
+	_printURL(indentationLevel + 1, url);
+	if (name != NULL) {
+		fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));	
+		fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), name);
+		fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 	}
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
 }
