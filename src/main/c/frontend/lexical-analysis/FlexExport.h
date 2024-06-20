@@ -6,7 +6,8 @@
  * Flex infrastructure, in this case, the current context (a.k.a. start
  * condition).
  */
-unsigned int flexCurrentContext(void) {
+unsigned int flexCurrentContext(void)
+{
 	return YY_START;
 }
 

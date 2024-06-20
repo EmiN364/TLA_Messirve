@@ -51,12 +51,14 @@ typedef struct Figuritas Figuritas;
  * Node types for the Abstract Syntax Tree (AST).
  */
 
-typedef enum SingleOrMultiple {
+typedef enum SingleOrMultiple
+{
 	SINGLE,
 	MULTIPLE
 } SingleOrMultiple;
 
-typedef enum ElementType {
+typedef enum ElementType
+{
 	TROPHY_ELEMENT_TYPE,
 	TEAM_ELEMENT_TYPE,
 	STADIUM_ELEMENT_TYPE,
@@ -67,7 +69,8 @@ typedef enum ElementType {
 	TOURNAMENT_ELEMENT_TYPE
 } ElementType;
 
-typedef enum TElementType {
+typedef enum TElementType
+{
 	TROPHY_TELEMENT_TYPE,
 	TEAM_TELEMENT_TYPE,
 	GROUP_TELEMENT_TYPE,
@@ -75,258 +78,308 @@ typedef enum TElementType {
 	BALL_TELEMENT_TYPE
 } TElementType;
 
-typedef enum TTeamType {
+typedef enum TTeamType
+{
 	BADGE_TTEAM_TYPE,
 	LINEUP_TTEAM_TYPE,
 	HOMEKIT_TTEAM_TYPE,
 	PLAYER_TTEAM_TYPE
 } TTeamType;
 
-typedef enum PlayerDataType {
+typedef enum PlayerDataType
+{
 	PLAYER_TYPE_STRING,
 	PLAYER_TYPE_FLOAT,
 	PLAYER_TYPE_PHOTO
 } PlayerDataType;
 
-typedef enum PlayerTypeStringType {
+typedef enum PlayerTypeStringType
+{
 	PLAYER_COUNTRY,
 	PLAYER_BIRTHDATE,
 	PLAYER_TEAM
 } PlayerTypeStringType;
 
-typedef enum PlayerTypeFloatType {
+typedef enum PlayerTypeFloatType
+{
 	PLAYER_HEIGHT,
 	PLAYER_WEIGHT
 } PlayerTypeFloatType;
 
-typedef enum StadiumDataType {
+typedef enum StadiumDataType
+{
 	STADIUM_CAPACITY,
 	STADIUM_PHOTO
 } StadiumDataType;
 
-struct Program {
-	Elements * elements;
+struct Program
+{
+	Elements *elements;
 };
 
-struct Tournament {
-	char * name;
-	TElements * tElements;
+struct Tournament
+{
+	char *name;
+	TElements *tElements;
 };
 
-struct Elements {
-	union {
-		struct {
-			Element * leftElement;
-			Elements * elements;
+struct Elements
+{
+	union
+	{
+		struct
+		{
+			Element *leftElement;
+			Elements *elements;
 		};
-		Element * element;
+		Element *element;
 	};
 	SingleOrMultiple type;
 };
 
-struct Element {
-	union {
-		Trophy * trophy;
-		Team * team;
-		Stadium * stadium;
-		Badge * badge;
-		Player * player;
-		Ball * ball;
-		Special * special;
-		Tournament * tournament;
+struct Element
+{
+	union
+	{
+		Trophy *trophy;
+		Team *team;
+		Stadium *stadium;
+		Badge *badge;
+		Player *player;
+		Ball *ball;
+		Special *special;
+		Tournament *tournament;
 	};
 	ElementType type;
 };
 
-struct TElements {
-	union {
-		struct {
-			TElement * leftTElement;
-			TElements * tElements;
+struct TElements
+{
+	union
+	{
+		struct
+		{
+			TElement *leftTElement;
+			TElements *tElements;
 		};
-		TElement * tElement;
+		TElement *tElement;
 	};
 	SingleOrMultiple type;
 };
 
-struct TElement {
-	union {
-		Trophy * trophy;
-		Team * team;
-		Group * group;
-		Stadium * stadium;
-		Ball * ball;
+struct TElement
+{
+	union
+	{
+		Trophy *trophy;
+		Team *team;
+		Group *group;
+		Stadium *stadium;
+		Ball *ball;
 	};
 	TElementType type;
 };
 
-struct Trophy {
-	char * name;
-	Photo * photo;
+struct Trophy
+{
+	char *name;
+	Photo *photo;
 };
 
-struct Group {
-	char * name;
-	Teams * teams;
+struct Group
+{
+	char *name;
+	Teams *teams;
 };
 
-struct Teams {
-	union {
-		struct {
-			Team * leftTeam;
-			Teams * teams;
+struct Teams
+{
+	union
+	{
+		struct
+		{
+			Team *leftTeam;
+			Teams *teams;
 		};
-		Team * team;
+		Team *team;
 	};
 	SingleOrMultiple type;
 };
 
-struct Team {
-	char * name;
-	TTeams * tTeams;
+struct Team
+{
+	char *name;
+	TTeams *tTeams;
 };
 
-struct TTeams {
-	union {
-		struct {
-			TTeam * leftTTeam;
-			TTeams * tTeams;
+struct TTeams
+{
+	union
+	{
+		struct
+		{
+			TTeam *leftTTeam;
+			TTeams *tTeams;
 		};
-		TTeam * tTeam;
+		TTeam *tTeam;
 	};
 	SingleOrMultiple type;
 };
 
-struct TTeam {
-	union {
-		Badge * badge;
-		Lineup * lineup;
-		HomeKit * homeKit;
-		Player * player;
+struct TTeam
+{
+	union
+	{
+		Badge *badge;
+		Lineup *lineup;
+		HomeKit *homeKit;
+		Player *player;
 	};
 	TTeamType type;
 };
 
-struct Player {
-	char * name;
-	PlayerDatas * playerDatas;
+struct Player
+{
+	char *name;
+	PlayerDatas *playerDatas;
 };
 
-struct PlayerDatas {
-	union {
-		struct {
-			PlayerData * leftPlayerData;
-			PlayerDatas * playerDatas;
+struct PlayerDatas
+{
+	union
+	{
+		struct
+		{
+			PlayerData *leftPlayerData;
+			PlayerDatas *playerDatas;
 		};
-		PlayerData * playerData;
+		PlayerData *playerData;
 	};
 	SingleOrMultiple type;
 };
 
-struct PlayerData {
-	union {
-		struct {
-			PlayerTypeString * playerTypeString;
-			char * value;
+struct PlayerData
+{
+	union
+	{
+		struct
+		{
+			PlayerTypeString *playerTypeString;
+			char *value;
 		};
-		struct {
-			PlayerTypeFloat * playerTypeFloat;
+		struct
+		{
+			PlayerTypeFloat *playerTypeFloat;
 			float floatValue;
 		};
-		Photo * photo;
+		Photo *photo;
 	};
 	PlayerDataType type;
 };
 
-struct PlayerTypeString {
+struct PlayerTypeString
+{
 	PlayerTypeStringType type;
 };
 
-struct PlayerTypeFloat {
+struct PlayerTypeFloat
+{
 	PlayerTypeFloatType type;
 };
 
-struct Stadium {
-	char * name;
-	StadiumDatas * stadiumDatas;
+struct Stadium
+{
+	char *name;
+	StadiumDatas *stadiumDatas;
 };
 
-struct StadiumDatas {
-	union {
-		struct {
-			StadiumData * leftStadiumData;
-			StadiumDatas * stadiumDatas;
+struct StadiumDatas
+{
+	union
+	{
+		struct
+		{
+			StadiumData *leftStadiumData;
+			StadiumDatas *stadiumDatas;
 		};
-		StadiumData * stadiumData;
+		StadiumData *stadiumData;
 	};
 	SingleOrMultiple type;
 };
 
-struct StadiumData {
-	union {
+struct StadiumData
+{
+	union
+	{
 		int capacity;
-		Photo * photo;
+		Photo *photo;
 	};
 	StadiumDataType type;
 };
 
-struct Badge {
-	char * name;
-	Photo * photo;
+struct Badge
+{
+	char *name;
+	Photo *photo;
 };
 
-struct Lineup {
-	char * name;
-	Photo * photo;
+struct Lineup
+{
+	char *name;
+	Photo *photo;
 };
 
-struct HomeKit {
-	char * name;
-	Photo * photo;
+struct HomeKit
+{
+	char *name;
+	Photo *photo;
 };
 
-struct Ball {
-	char * name;
-	Photo * photo;
+struct Ball
+{
+	char *name;
+	Photo *photo;
 };
 
-struct Special {
-	char * name;
-	Photo * photo;
+struct Special
+{
+	char *name;
+	Photo *photo;
 };
 
-struct Photo {
-	char * url;
+struct Photo
+{
+	char *url;
 };
 
 /**
  * Node recursive destructors.
  */
-void releaseProgram(Program * program);
-void releaseTournament(Tournament * tournament);
-void releaseElements(Elements * elements);
-void releaseElement(Element * element);
-void releaseTElements(TElements * tElements);
-void releaseTElement(TElement * tElement);
-void releaseTrophy(Trophy * trophy);
-void releaseGroup(Group * group);
-void releaseTeams(Teams * teams);
-void releaseTeam(Team * team);
-void releaseTTeams(TTeams * tTeams);
-void releaseTTeam(TTeam * tTeam);
-void releasePlayer(Player * player);
-void releasePlayerDatas(PlayerDatas * playerDatas);
-void releasePlayerData(PlayerData * playerData);
-void releasePlayerTypeString(PlayerTypeString * playerTypeString);
-void releasePlayerTypeFloat(PlayerTypeFloat * playerTypeFloat);
-void releaseStadium(Stadium * stadium);
-void releaseStadiumDatas(StadiumDatas * stadiumDatas);
-void releaseStadiumData(StadiumData * stadiumData);
-void releaseBadge(Badge * badge);
-void releaseLineup(Lineup * lineup);
-void releaseHomeKit(HomeKit * homeKit);
-void releaseBall(Ball * ball);
-void releaseSpecial(Special * special);
-void releasePhoto(Photo * photo);
+void releaseProgram(Program *program);
+void releaseTournament(Tournament *tournament);
+void releaseElements(Elements *elements);
+void releaseElement(Element *element);
+void releaseTElements(TElements *tElements);
+void releaseTElement(TElement *tElement);
+void releaseTrophy(Trophy *trophy);
+void releaseGroup(Group *group);
+void releaseTeams(Teams *teams);
+void releaseTeam(Team *team);
+void releaseTTeams(TTeams *tTeams);
+void releaseTTeam(TTeam *tTeam);
+void releasePlayer(Player *player);
+void releasePlayerDatas(PlayerDatas *playerDatas);
+void releasePlayerData(PlayerData *playerData);
+void releasePlayerTypeString(PlayerTypeString *playerTypeString);
+void releasePlayerTypeFloat(PlayerTypeFloat *playerTypeFloat);
+void releaseStadium(Stadium *stadium);
+void releaseStadiumDatas(StadiumDatas *stadiumDatas);
+void releaseStadiumData(StadiumData *stadiumData);
+void releaseBadge(Badge *badge);
+void releaseLineup(Lineup *lineup);
+void releaseHomeKit(HomeKit *homeKit);
+void releaseBall(Ball *ball);
+void releaseSpecial(Special *special);
+void releasePhoto(Photo *photo);
 
 #endif
