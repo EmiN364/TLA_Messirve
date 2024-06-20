@@ -215,6 +215,38 @@ char * _getPhotoFromStadium(Stadium * stadium) {
 	return stadiumDatas->leftStadiumData->type == STADIUM_PHOTO ? stadiumDatas->leftStadiumData->photo->url : "https://placehold.co/400?text=No%20player%20image";
 }
 
+typedef struct StadiumAttributes {
+	boolean capacity;
+	boolean photo;
+} StadiumAttributes;
+
+static void _checkValidStadium(StadiumAttributes * attributes, StadiumDatas * stadiumDatas) {
+	// Same as player, but with photo and capacity
+
+	StadiumData * stadiumData = stadiumDatas->type == SINGLE ? stadiumDatas->stadiumData : stadiumDatas->leftStadiumData;
+
+	if (stadiumDatas->stadiumData->type == STADIUM_CAPACITY) {
+		if (attributes->capacity) {
+			logError(_logger, "The stadium has repeated attributes");
+			exit(1);
+		}
+		attributes->capacity = true;
+	} else if (stadiumDatas->stadiumData->type == STADIUM_PHOTO) {
+		if (attributes->photo) {
+			logError(_logger, "The stadium has repeated attributes");
+			exit(1);
+		}
+		attributes->photo = true;
+	} else {
+		logError(_logger, "The specified element type is unknown: %d", stadiumDatas->stadiumData->type);
+		exit(1);
+	}
+
+	if (stadiumDatas->type == MULTIPLE) {
+		_checkValidStadium(attributes, stadiumDatas->stadiumDatas);
+	}
+}
+
 static void _generateStadium(const unsigned int indentationLevel, Stadium * stadium) {
 	fprintf(f, "%s<div class=\"card mb-4\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
 
@@ -224,6 +256,8 @@ static void _generateStadium(const unsigned int indentationLevel, Stadium * stad
 	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), stadium->name);
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 
+	StadiumAttributes attributes = {0};
+	_checkValidStadium(&attributes, stadium->stadiumDatas);
 	_generateStadiumDatas(indentationLevel + 1, stadium->stadiumDatas);
 
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel));
@@ -298,32 +332,31 @@ typedef struct playerAttributes {
 } PlayerAttributes;
 
 // This function checks that there are not repeated atributes
-static void _checkValidPlayer(PlayerAttributes * _attributes, PlayerDatas * playerDatas) {
-	PlayerAttributes attributes = *_attributes;
+static void _checkValidPlayer(PlayerAttributes * attributes, PlayerDatas * playerDatas) {
 	PlayerData * playerData = playerDatas->type == SINGLE ? playerDatas->playerData : playerDatas->leftPlayerData;
 
 	if (playerDatas->playerData->type == PLAYER_TYPE_STRING) {
 		switch (playerDatas->playerData->playerTypeString->type) {
 			case PLAYER_COUNTRY:
-				if (attributes.country) {
+				if (attributes->country) {
 					logError(_logger, "The player has repeated attributes");
 					exit(1);
 				}
-				attributes.country = true;
+				attributes->country = true;
 				break;
 			case PLAYER_BIRTHDATE:
-				if (attributes.birthdate) {
+				if (attributes->birthdate) {
 					logError(_logger, "The player has repeated attributes");
 					exit(1);
 				}
-				attributes.birthdate = true;
+				attributes->birthdate = true;
 				break;
 			case PLAYER_TEAM:
-				if (attributes.team) {
+				if (attributes->team) {
 					logError(_logger, "The player has repeated attributes");
 					exit(1);
 				}
-				attributes.team = true;
+				attributes->team = true;
 				break;
 			default:
 				logError(_logger, "1) The specified element type is unknown: %d", playerDatas->playerData->playerTypeString->type);
@@ -333,18 +366,18 @@ static void _checkValidPlayer(PlayerAttributes * _attributes, PlayerDatas * play
 	} else if (playerDatas->playerData->type == PLAYER_TYPE_FLOAT) {
 		switch (playerDatas->playerData->playerTypeFloat->type) {
 			case PLAYER_HEIGHT:
-				if (attributes.height) {
+				if (attributes->height) {
 					logError(_logger, "The player has repeated attributes");
 					exit(1);
 				}
-				attributes.height = true;
+				attributes->height = true;
 				break;
 			case PLAYER_WEIGHT:
-				if (attributes.weight) {
+				if (attributes->weight) {
 					logError(_logger, "The player has repeated attributes");
 					exit(1);
 				}
-				attributes.weight = true;
+				attributes->weight = true;
 				break;
 			default:
 				logError(_logger, "2) The specified element type is unknown: %d", playerDatas->playerData->playerTypeFloat->type);
@@ -352,17 +385,17 @@ static void _checkValidPlayer(PlayerAttributes * _attributes, PlayerDatas * play
 				break;
 		}
 	} else if (playerDatas->playerData->type == PLAYER_TYPE_PHOTO) {
-		if (attributes.photo) {
+		if (attributes->photo) {
 			logError(_logger, "The player has repeated attributes");
 			exit(1);
 		}
-		attributes.photo = true;
+		attributes->photo = true;
 	} else {
 		logError(_logger, "3) The specified element type is unknown: %d", playerDatas->playerData->type);
 		exit(1);
 	}
 	if (playerDatas->type == MULTIPLE) {
-		_checkValidPlayer(&attributes, playerDatas->playerDatas);
+		_checkValidPlayer(attributes, playerDatas->playerDatas);
 	}
 }
 
