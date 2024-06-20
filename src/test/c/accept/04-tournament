@@ -1,118 +1,118 @@
 // Creación de equipos con grupos para un torneo
 team Brasil {
     badge { // Creación de figurita del escudo de Brasil
-        Photo: http://foto.google.com/cbf.png;
+        Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
     },
     player Neymar { // Creación de figurita de Neymar
         Birthdate: 5/2/1992;
         Height: 1.75;
         Weight: 68;
         Team: Santos FC;
-        Photo: http://foto.google.com/neymar.png;
+        Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
     },
     player Thiago Silva { // Creación de figurita de Thiago Silva
         Birthdate: 22/9/1984;
         Height: 1.83;
         Weight: 79;
         Team: AC Milan;
-        Photo: http://foto.google.com/thiagosilva.png;
+        Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
     }
 },
 tournament Copa America {
     trophy {
-        Photo: http://foto.google.com/trofeo_copa.png;
+        Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
     },
     stadium Lusail Stadium {
         Capacity: 88966;
-        Photo: http://foto.google.com/FotoDelLusailEnHd.jpg;
+        Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
     },
     ball Jabulani {
-        Photo: http://foto.google.com/FotoDeLaJabulaniEnHd.jpg;
+        Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
     },
     group A {
         team Argentina {
             badge { // Creación de figurita del escudo de Argentina
-                Photo: http://foto.google.com/afa.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Angel Di Maria { // Creación de figurita de Di Maria
                 Birthdate: 14/2/1988;
                 Height: 1.78;
                 Weight: 75;
                 Team: Sport Lisboa e Benfica;
-                Photo: http://foto.google.com/dimaria.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Nicolas Otamendi { // Creación de figurita de Otamendi
                 Birthdate: 12/2/1988;
                 Height: 1.83;
                 Weight: 82;
                 Team: Sport Lisboa e Benfica;
-                Photo: http://foto.google.com/dimaria.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Lionel Messi { // Creación de figurita de Messi
                 Birthdate: 24/6/1987;
                 Height: 1.69;
                 Weight: 67;
                 Team: Inter Miami CF;
-                Photo: http://foto.google.com/messi.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             }
         },
         team Mexico {
             badge { // Creación de figurita del escudo de Mexico
-                Photo: http://foto.google.com/fmf.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Javier Hernandez { // Creación de figurita de Chicharito
                 Birthdate: 1/6/1988;
                 Height: 1.75;
                 Weight: 73;
                 Team: Manchester United;
-                Photo: http://foto.google.com/chicharito.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Andres Guardado { // Creación de figurita de Guardado
                 Birthdate: 28/9/1986;
                 Height: 1.69;
                 Weight: 64;
                 Team: Valencia CF;
-                Photo: http://foto.google.com/guardado.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             }
         },
         team Uruguay {
             badge { // Creación de figurita del escudo de Uruguay
-                Photo: http://foto.google.com/auuf.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Diego Forlan { // Creación de figurita de Forlan
                 Birthdate: 19/5/1979;
                 Height: 1.80;
                 Weight: 75;
                 Team: Cerezo Osaka;
-                Photo: http://foto.google.com/forlan.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Luis Suarez { // Creación de figurita de Suarez
                 Birthdate: 24/1/1987;
                 Height: 1.82;
                 Weight: 86;
                 Team: Liverpool FC;
-                Photo: http://foto.google.com/suarez.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             }
         } 
     },
     group B {
         team Colombia {
             badge { // Creación de figurita del escudo de Colombia
-                Photo: http://foto.google.com/fcf.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player James Rodriguez { // Creación de figurita de James Rodriguez
                 Birthdate: 12/7/1991;
                 Height: 1.80;
                 Weight: 75;
                 Team: AS Monaco;
-                Photo: http://foto.google.com/james.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             },
             player Radamel Falcao { // Creación de figurita de Falcao
                 Birthdate: 10/2/1986;
                 Height: 1.77;
                 Weight: 72;
                 Team: AS Monaco;
-                Photo: http://foto.google.com/falcao.png;
+                Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
             }
         },
         team Brasil // Already defined elsewhere
