@@ -1,0 +1,26 @@
+{
+  "name": "messirve-language",
+  "displayName": "Messirve Language",
+  "description": "Visual Studio Code extension for Messirve Language syntax highlighting and support.",
+  "version": "0.0.1",
+  "publisher": "Messirve",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "messirve",
+      "aliases": ["Messirve", "messirve"],
+      "extensions": [".ms"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "messirve",
+      "scopeName": "source.messirve",
+      "path": "./syntaxes/messirve.tmLanguage.json"
+    }]
+  }
+}
