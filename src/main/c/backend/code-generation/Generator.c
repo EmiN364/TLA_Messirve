@@ -249,7 +249,7 @@ static void _generateStadiumData(const unsigned int indentationLevel, StadiumDat
 	switch(stadiumData->type) {
 		case STADIUM_CAPACITY:
 			fprintf(f, "%s<ul class=\"list-group list-group-flush\">\n", _indentation(indentationLevel));
-			fprintf(f, "%s<li class=\"list-group-item\">Capacidad: %d</li>\n", _indentation(indentationLevel + 1), stadiumData->capacity);
+			fprintf(f, "%s<li class=\"list-group-item\">Capacidad: %d espectadores</li>\n", _indentation(indentationLevel + 1), stadiumData->capacity);
 			fprintf(f, "%s</ul>\n", _indentation(indentationLevel));
 			break;
 		case STADIUM_PHOTO:
@@ -353,7 +353,7 @@ static void _generatePlayerTypeString(const unsigned int indentationLevel, Playe
 static void _generatePlayerTypeFloat(const unsigned int indentationLevel, PlayerTypeFloat * playerTypeFloat, float floatValue) {
 	switch (playerTypeFloat->type) {
 		case PLAYER_HEIGHT:
-			fprintf(f, "%s<li class=\"list-group-item\">Altura: %.2f</li>\n", _indentation(indentationLevel), floatValue);
+			fprintf(f, "%s<li class=\"list-group-item\">Altura: %.2fcm</li>\n", _indentation(indentationLevel), floatValue);
 			break;
 		case PLAYER_WEIGHT:
 			fprintf(f, "%s<li class=\"list-group-item\">Peso: %.2fkg</li>\n", _indentation(indentationLevel), floatValue);

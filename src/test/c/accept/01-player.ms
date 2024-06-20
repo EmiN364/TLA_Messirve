@@ -4,5 +4,5 @@ player Lionel Messi {
     Team: Inter Miami CF;
     Height: 1.69;
     Weight: 67;
-    Photo: http://foto.google.com/FotoDeMessiEnHd.jpg;
+    Photo: https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg;
 }
