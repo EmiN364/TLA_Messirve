@@ -48,7 +48,7 @@ static void _generateTeams(const unsigned int indentationLevel, Teams * teams);
 static void _generateStadium(const unsigned int indentationLevel, Stadium * stadium);
 static void _generateBadge(const unsigned int indentationLevel, Badge * badge);
 static void _generatePlayer(const unsigned int indentationLevel, Player * player);
-static void _addPlayer(Player * player);
+// static void _addPlayer(Player * player);
 static void _generateBall(const unsigned int indentationLevel, Ball * ball);
 static void _generateSpecial(const unsigned int indentationLevel, Special * special);
 static void _generateTournament(const unsigned int indentationLevel, Tournament * tournament);
@@ -274,7 +274,7 @@ char * _getPhotoFromPlayer(Player * player) {
 	return playerDatas->leftPlayerData->type == PLAYER_TYPE_PHOTO ? playerDatas->leftPlayerData->photo->url : "https://placehold.co/400?text=No%20player%20image";
 }
 
-static void _addPlayer(Player * player) {
+/* static void _addPlayer(Player * player) {
 	for (struct playerMap * current = playerMapHead; current != NULL; current = current->next) {
 		if (strcmp(current->key, player->name) == 0) {
 			return;
@@ -285,11 +285,93 @@ static void _addPlayer(Player * player) {
 	newPlayerMap->player = player;
 	newPlayerMap->next = playerMapHead;
 	playerMapHead = newPlayerMap;
+} */
+
+typedef struct playerAttributes {
+	boolean name;
+	boolean country;
+	boolean birthdate;
+	boolean team;
+	boolean height;
+	boolean weight;
+	boolean photo;
+} PlayerAttributes;
+
+// This function checks that there are not repeated atributes
+static void _checkValidPlayer(PlayerAttributes * _attributes, PlayerDatas * playerDatas) {
+	PlayerAttributes attributes = *_attributes;
+	PlayerData * playerData = playerDatas->type == SINGLE ? playerDatas->playerData : playerDatas->leftPlayerData;
+
+	if (playerDatas->playerData->type == PLAYER_TYPE_STRING) {
+		switch (playerDatas->playerData->playerTypeString->type) {
+			case PLAYER_COUNTRY:
+				if (attributes.country) {
+					logError(_logger, "The player has repeated attributes");
+					exit(1);
+				}
+				attributes.country = true;
+				break;
+			case PLAYER_BIRTHDATE:
+				if (attributes.birthdate) {
+					logError(_logger, "The player has repeated attributes");
+					exit(1);
+				}
+				attributes.birthdate = true;
+				break;
+			case PLAYER_TEAM:
+				if (attributes.team) {
+					logError(_logger, "The player has repeated attributes");
+					exit(1);
+				}
+				attributes.team = true;
+				break;
+			default:
+				logError(_logger, "1) The specified element type is unknown: %d", playerDatas->playerData->playerTypeString->type);
+				exit(1);
+				break;
+		}
+	} else if (playerDatas->playerData->type == PLAYER_TYPE_FLOAT) {
+		switch (playerDatas->playerData->playerTypeFloat->type) {
+			case PLAYER_HEIGHT:
+				if (attributes.height) {
+					logError(_logger, "The player has repeated attributes");
+					exit(1);
+				}
+				attributes.height = true;
+				break;
+			case PLAYER_WEIGHT:
+				if (attributes.weight) {
+					logError(_logger, "The player has repeated attributes");
+					exit(1);
+				}
+				attributes.weight = true;
+				break;
+			default:
+				logError(_logger, "2) The specified element type is unknown: %d", playerDatas->playerData->playerTypeFloat->type);
+				exit(1);
+				break;
+		}
+	} else if (playerDatas->playerData->type == PLAYER_TYPE_PHOTO) {
+		if (attributes.photo) {
+			logError(_logger, "The player has repeated attributes");
+			exit(1);
+		}
+		attributes.photo = true;
+	} else {
+		logError(_logger, "3) The specified element type is unknown: %d", playerDatas->playerData->type);
+		exit(1);
+	}
+	if (playerDatas->type == MULTIPLE) {
+		_checkValidPlayer(&attributes, playerDatas->playerDatas);
+	}
 }
 
 static void _generatePlayer(const unsigned int indentationLevel, Player * player) {
+	PlayerAttributes attributes = {0};
+	_checkValidPlayer(&attributes, player->playerDatas);
+
 	fprintf(f, "%s<div class=\"card\" style=\"width: 18rem;\">\n", _indentation(indentationLevel));
-	_printURL(indentationLevel, _getPhotoFromPlayer(player)); //TODO: Fix. Pensar que es un arbol.
+	_printURL(indentationLevel, _getPhotoFromPlayer(player));
 	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
 	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), player->name);
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
@@ -381,9 +463,6 @@ static void _addTeam(Team * team) {
 }
 
 static void _generateTeam(const unsigned int indentationLevel, Team * team) {
-	/* teamMapHead = NULL;
-	playerMapHead = NULL; */
-	
 	fprintf(f, "%s<div class=\"card\">\n", _indentation(indentationLevel));
 	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
 	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), team->name);
@@ -471,7 +550,7 @@ static void _generateTTeam(const unsigned int indentationLevel, TTeam * tTeam) {
 			_generateHomeKit(indentationLevel, tTeam->homeKit);
 			break;
 		case PLAYER_TTEAM_TYPE:
-			_addPlayer(tTeam->player);
+			// _addPlayer(tTeam->player);
 			_generatePlayer(indentationLevel, tTeam->player);
 			break;
 		default:
@@ -586,7 +665,7 @@ static void _generateTElement(const unsigned int indentationLevel, TElement * tE
 static void _generateGroup(const unsigned int indentationLevel, Group * group) {
 	fprintf(f, "%s<div class=\"card\">\n", _indentation(indentationLevel));
 	fprintf(f, "%s<div class=\"card-body\">\n", _indentation(indentationLevel + 1));
-	fprintf(f, "%s<h5 class=\"card-title\">%s</h5>\n", _indentation(indentationLevel + 2), group->name);
+	fprintf(f, "%s<h5 class=\"card-title\">Grupo %s</h5>\n", _indentation(indentationLevel + 2), group->name);
 	fprintf(f, "%s</div>\n", _indentation(indentationLevel + 1));
 
 	_generateTeams(indentationLevel + 1, group->teams);

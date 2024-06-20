@@ -1,4 +1,23 @@
 // Creación de equipos con grupos para un torneo
+team Brasil {
+    badge { // Creación de figurita del escudo de Brasil
+        Photo: https://upload.wikimedia.org/wikipedia/commons/1/1b/Logo_Brasil.png;
+    },
+    player Neymar { // Creación de figurita de Neymar
+        Birthdate: 5/2/1992;
+        Height: 1.75;
+        Weight: 68;
+        Team: Santos FC;
+        Photo: https://b.fssta.com/uploads/application/soccer/headshots/713.png;
+    },
+    player Thiago Silva { // Creación de figurita de Thiago Silva
+        Birthdate: 22/9/1984;
+        Height: 1.83;
+        Weight: 79;
+        Team: AC Milan;
+        Photo: https://m.media-amazon.com/images/M/MV5BNWRmZjU3OGUtMjNjMC00YmY5LTk2NTgtN2QxMDY3MzIyNGNiXkEyXkFqcGdeQXVyMjUyNDk2ODc@._V1_.jpg;
+    }
+},
 tournament Copa America {
     trophy Copa {
         Photo: https://www.directvsports.com/__export/1718715080604/sites/dsports/img/2024/06/18/sgf2csjbcvfxvfwnn7liq53u3y.jpg_135585964.jpg;
@@ -96,24 +115,6 @@ tournament Copa America {
                 Photo: https://www.eluniverso.com/resizer/sy2LvzVKHumKT4FQZ4jSRG7yOGg=/567x647/smart/filters:quality(70)/cloudfront-us-east-1.images.arcpublishing.com/eluniverso/NRKU5V2CGFB7RFLNQA5NKIG5E4.jpg;
             }
         },
-        team Brasil {
-            badge { // Creación de figurita del escudo de Brasil
-                Photo: https://upload.wikimedia.org/wikipedia/commons/1/1b/Logo_Brasil.png;
-            },
-            player Neymar { // Creación de figurita de Neymar
-                Birthdate: 5/2/1992;
-                Height: 1.75;
-                Weight: 68;
-                Team: Santos FC;
-                Photo: https://b.fssta.com/uploads/application/soccer/headshots/713.png;
-            },
-            player Thiago Silva { // Creación de figurita de Thiago Silva
-                Birthdate: 22/9/1984;
-                Height: 1.83;
-                Weight: 79;
-                Team: AC Milan;
-                Photo: https://m.media-amazon.com/images/M/MV5BNWRmZjU3OGUtMjNjMC00YmY5LTk2NTgtN2QxMDY3MzIyNGNiXkEyXkFqcGdeQXVyMjUyNDk2ODc@._V1_.jpg;
-            }
-        }
+        team Brasil // Already defined elsewhere
     }
 }
