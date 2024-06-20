@@ -2,17 +2,14 @@
 
 [![✗](https://github.com/agustin-golmar/Flex-Bison-Compiler/actions/workflows/pipeline.yaml/badge.svg?branch=production)](https://github.com/agustin-golmar/Flex-Bison-Compiler/actions/workflows/pipeline.yaml)
 
-# Flex-Bison-Compiler
+# Flex-Bison-Compiler for Messirve Language
 
 A base compiler example, developed with Flex and Bison.
 
-* [Environment](#environment)
-* [CI/CD](#cicd)
-* [Recommended Extensions](#recommended-extensions)
-* Installation
-  * [Docker](doc/readme/Docker.md)
-  * [Microsoft Windows](doc/readme/Windows.md)
-  * [Ubuntu](doc/readme/Ubuntu.md)
+- [Flex-Bison-Compiler for Messirve Language](#flex-bison-compiler-for-messirve-language)
+  - [Environment](#environment)
+  - [CI/CD](#cicd)
+  - [Recommended Extensions](#recommended-extensions)
 
 ## Environment
 
@@ -39,6 +36,7 @@ After integration is done, change the badges of this `README.md` to point to the
 
 ## Recommended Extensions
 
+* [Messirve Extension](https://marketplace.visualstudio.com/items?itemName=Messirve.messirve-language)
 * [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
 * [CMake Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
 * [Yash](https://marketplace.visualstudio.com/items?itemName=daohong-emilio.yash)
